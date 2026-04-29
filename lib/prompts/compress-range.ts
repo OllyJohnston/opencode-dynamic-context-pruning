@@ -44,7 +44,7 @@ You specify boundaries by ID using the injected IDs visible in the conversation:
 - \`mNNNN\` IDs identify raw messages
 - \`bN\` IDs identify previously compressed blocks
 
-Each message has an ID inside XML metadata tags like \`<dcp-message-id>...</dcp-message-id>\`.
+Each message has an ID header inside XML metadata tags like \`<dcp-message-id>...</dcp-message-id>\` at the very start of the message block.
 The same ID tag appears in every tool output of the message it belongs to — each unique ID identifies one complete message.
 Treat these tags as boundary metadata only, not as tool result content.
 
@@ -53,6 +53,7 @@ Rules:
 - Pick \`startId\` and \`endId\` directly from injected IDs in context.
 - IDs must exist in the current visible context.
 - \`startId\` must appear before \`endId\`.
+- **PRIORITY**: Always begin your selection from the earliest possible message in the context (usually \`m0001\` or the earliest visible \`bN\` block) to ensure context management is effective and contiguous.
 - Do not invent IDs. Use only IDs that are present in context.
 
 BATCHING

@@ -15,6 +15,7 @@ import {
 import {
     appendToTextPart,
     appendToLastTextPart,
+    prependToTextPart,
     createSyntheticTextPart,
     hasContent,
 } from "../utils"
@@ -214,11 +215,15 @@ function injectAnchoredNudge(message: WithParts, nudgeText: string): void {
     }
 
     if (message.info.role === "user") {
-        if (appendToLastTextPart(message, nudgeText)) {
-            return
+        for (const part of message.parts) {
+            if (part.type === "text") {
+                if (prependToTextPart(part, nudgeText)) {
+                    return
+                }
+            }
         }
 
-        message.parts.push(createSyntheticTextPart(message, nudgeText))
+        message.parts.unshift(createSyntheticTextPart(message, nudgeText))
         return
     }
 
@@ -232,7 +237,7 @@ function injectAnchoredNudge(message: WithParts, nudgeText: string): void {
 
     for (const part of message.parts) {
         if (part.type === "text") {
-            if (appendToTextPart(part, nudgeText)) {
+            if (prependToTextPart(part, nudgeText)) {
                 return
             }
         }
@@ -241,7 +246,7 @@ function injectAnchoredNudge(message: WithParts, nudgeText: string): void {
     const syntheticPart = createSyntheticTextPart(message, nudgeText)
     const firstToolIndex = message.parts.findIndex((p) => p.type === "tool")
     if (firstToolIndex === -1) {
-        message.parts.push(syntheticPart)
+        message.parts.unshift(syntheticPart)
     } else {
         message.parts.splice(firstToolIndex, 0, syntheticPart)
     }

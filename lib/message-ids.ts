@@ -113,7 +113,7 @@ export function formatMessageIdTag(
         })
         .join("")
 
-    return `\n<${MESSAGE_ID_TAG_NAME}${serializedAttributes}>${ref}</${MESSAGE_ID_TAG_NAME}>`
+    return `<${MESSAGE_ID_TAG_NAME}${serializedAttributes}>${ref}</${MESSAGE_ID_TAG_NAME}>`
 }
 
 export function assignMessageRefs(state: SessionState, messages: WithParts[]): number {

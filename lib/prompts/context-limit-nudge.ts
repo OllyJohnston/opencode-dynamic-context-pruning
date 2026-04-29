@@ -1,18 +1,16 @@
 export const CONTEXT_LIMIT_NUDGE = `<dcp-system-reminder>
-CRITICAL WARNING: MAX CONTEXT LIMIT REACHED
+CRITICAL WARNING: CONTEXT EXHAUSTION IMMINENT
 
-You are at or beyond the configured max context threshold. This is an emergency context-recovery moment.
-
-You MUST use the \`compress\` tool now. Do not continue normal exploration until compression is handled.
-
-If you are in the middle of a critical atomic operation, finish that atomic step first, then compress immediately.
+You have reached or exceeded the configured context threshold. To prevent truncation and maintain high-fidelity retrieval, you MUST use the \`compress\` tool now.
 
 SELECTION PROCESS
-Start from older, resolved history and capture as much stale context as safely possible in one pass.
-Avoid the newest active working messages unless it is clearly closed.
+- **MANDATORY**: Start your selection from the EARLIEST available messages in the context.
+- Include all resolved history, stale research, and completed tool iterations.
+- Capture as much stale context as possible in this pass to recover maximum context window.
 
 SUMMARY REQUIREMENTS
-Your summary MUST cover all essential details from the selected messages so work can continue.
-If the compressed range includes user messages, preserve user intent exactly. Prefer direct quotes for short user messages to avoid semantic drift.
+- Your summary MUST be exhaustive and technical.
+- Preserve all key findings, file paths, and function signatures.
+- If the compressed range includes user messages, preserve user intent EXACTLY.
 </dcp-system-reminder>
 `
