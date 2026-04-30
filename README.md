@@ -138,8 +138,9 @@ Each level overrides the previous, so project settings take priority over global
         // Start adding compression reminders after this many
         // messages have happened since the last user message
         "iterationNudgeThreshold": 15,
-        // Controls how likely compression is after user messages
-        // ("strong" = more likely, "soft" = less likely)
+        // Controls nudge placement and visibility:
+        // "strong" = Prepend to User message as a header (High visibility/Anchoring)
+        // "soft" = Append to Assistant message as a footer (Legacy style)
         "nudgeForce": "soft",
         // Tool names whose completed outputs are appended to the compression
         "protectedTools": [],
