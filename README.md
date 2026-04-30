@@ -111,14 +111,14 @@ Each level overrides the previous, so project settings take priority over global
         "showCompression": false,
         // Let active summary tokens extend the effective maxContextLimit
         "summaryBuffer": true,
-        // Soft upper threshold: above this, DCP keeps injecting strong
+        // Critical upper threshold: above this, DCP injects urgent
         // compression nudges (based on nudgeFrequency), so compression is
         // much more likely. Accepts: number or "X%" of model context window.
-        "maxContextLimit": 100000,
-        // Soft lower threshold for reminder nudges: below this, turn/iteration
+        "maxContextLimit": "60%",
+        // Below threshold for reminder nudges: below this, turn/iteration
         // reminders are off (compression less likely). At/above this, reminders
         // are on. Accepts: number or "X%" of model context window.
-        "minContextLimit": 50000,
+        "minContextLimit": "40%",
         // Optional per-model override for maxContextLimit by providerID/modelID.
         // If present, this wins over the global maxContextLimit.
         // Accepts: number or "X%".
@@ -133,15 +133,18 @@ Each level overrides the previous, so project settings take priority over global
         //     "openai/gpt-5.3-codex": 50000,
         //     "anthropic/claude-sonnet-4.6": "25%"
         // },
-        // How often the context-limit nudge fires (1 = every fetch, 5 = every 5th)
-        "nudgeFrequency": 5,
+        // How often the context-limit nudge fires after threshold met (1 = every fetch, 5 = every 5th)
+        // For smaller models (100k ctx) this needs to be much more frequent due to how quickly context fills up
+        "nudgeFrequency": 2,
         // Start adding compression reminders after this many
-        // messages have happened since the last user message
-        "iterationNudgeThreshold": 15,
+        // user turns have happened since last compression
+        // For smaller models (100k ctx) this needs to be much more frequent
+        "iterationNudgeThreshold": 3,
         // Controls nudge placement and visibility:
+        // Smaller models (100k ctx) need strong nudges due to criticality of noticing it
         // "strong" = Prepend to User message as a header (High visibility/Anchoring)
         // "soft" = Append to Assistant message as a footer (Legacy style)
-        "nudgeForce": "soft",
+        "nudgeForce": "strong",
         // Tool names whose completed outputs are appended to the compression
         "protectedTools": [],
         // Preserve your messages during compression.
