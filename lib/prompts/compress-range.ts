@@ -50,10 +50,10 @@ Treat these tags as boundary metadata only, not as tool result content.
 
 Rules:
 
-- Pick \`startId\` and \`endId\` directly from injected IDs in context.
-- IDs must exist in the current visible context.
-- \`startId\` must appear before \`endId\`.
-- **PRIORITY**: Always begin your selection from the earliest possible message in the context (usually \`m0001\` or the earliest visible \`bN\` block) to ensure context management is effective and contiguous.
+- **PRIORITY: startId Anchor (The Visual Filter)**:
+  - Identify the most recent summary block (e.g., \`bN\`) and note its \`endId\`.
+  - Look at the messages immediately following that block.
+  - **The Rule**: Your \`startId\` is the first message ID containing actual conversation, code, or tool outputs. Skip "Compression Successful" or technical notifications.
 - Do not invent IDs. Use only IDs that are present in context.
 
 BATCHING
