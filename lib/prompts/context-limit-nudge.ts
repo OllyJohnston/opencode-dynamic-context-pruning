@@ -3,6 +3,8 @@ CRITICAL WARNING: CONTEXT EXHAUSTION IMMINENT
 
 You have reached or exceeded the configured context threshold. To prevent truncation and maintain high-fidelity retrieval, you MUST use the \`compress\` tool now.
 
+- **PRIORITY: COMPRESS FIRST**: You MUST call the \`compress\` tool IMMEDIATELY. Do not perform any other tasks, write any code, or provide summaries until the context has been recovered through compression. This is a dedicated cleanup turn.
+
 SELECTION PROCESS
 - **MANDATORY**: Start your selection from the EARLIEST available messages in the context.
 - Include all resolved history, stale research, and completed tool iterations.
