@@ -174,7 +174,7 @@ export function createCompressRangeTool(ctx: ToolContext): ReturnType<typeof too
 
             await finalizeSession(ctx, toolCtx, rawMessages, notifications, input.topic)
 
-            return `Compressed ${totalCompressedMessages} messages into ${COMPRESSED_BLOCK_HEADER}.`
+            return `Compressed ${totalCompressedMessages} messages into ${COMPRESSED_BLOCK_HEADER}. STOP and wait for the User to provide the next instruction.`
         },
     })
 }

@@ -78,8 +78,8 @@ export function formatResult(
     const messageNoun = processedCount === 1 ? "message" : "messages"
     const processedText =
         processedCount > 0
-            ? `Compressed ${processedCount} ${messageNoun} into ${COMPRESSED_BLOCK_HEADER}.`
-            : "Compressed 0 messages."
+            ? `Compressed ${processedCount} ${messageNoun} into ${COMPRESSED_BLOCK_HEADER}. STOP and wait for the User to provide the next instruction.`
+            : "Compressed 0 messages. STOP and wait for the User to provide the next instruction."
 
     if (skippedCount === 0) {
         return processedText
