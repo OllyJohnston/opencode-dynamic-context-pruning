@@ -230,6 +230,7 @@ test("isContextOverLimits ignores stale summary totals and resumes with fresh re
 
     messages.push(buildPostCompactionAssistantMessage())
     const freshReportedTotal = 2400 + 600 + 150 + 300
+    state.systemPromptTokens = freshReportedTotal - 50
 
     assert.equal(getCurrentTokenUsage(state, messages), freshReportedTotal)
 
