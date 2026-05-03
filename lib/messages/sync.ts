@@ -114,6 +114,17 @@ export const syncCompressionBlocks = (
         }
     }
 
+    // Recalculate stats based on active reality
+    let activePrunedTokens = 0
+    for (const blockId of messagesState.activeBlockIds) {
+        const block = messagesState.blocksById.get(blockId)
+        if (block) {
+            activePrunedTokens += block.compressedTokens
+        }
+    }
+    state.stats.totalPruneTokens = activePrunedTokens
+    state.stats.pruneTokenCounter = 0 // Reset turn counter to avoid double counting
+
     // Sync tool pruning state
     const currentToolIds = new Set<string>()
     for (const msg of messages) {
