@@ -31,6 +31,7 @@ import {
     handleManualToggleCommand,
     handleManualTriggerCommand,
     handleRecompressCommand,
+    handleResetCommand,
     handleStatsCommand,
     handleSweepCommand,
 } from "./commands"
@@ -265,6 +266,11 @@ export function createCommandExecuteHandler(
                     args: subArgs,
                 })
                 throw new Error("__DCP_RECOMPRESS_HANDLED__")
+            }
+
+            if (subcommand === "reset" || subcommand === "clear") {
+                await handleResetCommand(commandCtx)
+                throw new Error("__DCP_RESET_HANDLED__")
             }
 
             await handleHelpCommand(commandCtx)
