@@ -20,7 +20,7 @@ import {
     hasContent,
 } from "../utils"
 import { getLastUserMessage, isIgnoredUserMessage } from "../query"
-import { getCurrentTokenUsage } from "../../token-utils"
+import { getCurrentTokenUsage, countAllMessageTokens } from "../../token-utils"
 import { getActiveSummaryTokenUsage } from "../../state/utils"
 
 const MESSAGE_MODE_NUDGE_PRIORITY: MessagePriority = "high"
