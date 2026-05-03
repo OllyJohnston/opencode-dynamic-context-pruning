@@ -295,7 +295,7 @@ test("isContextOverLimits does not extend the max threshold when summaryBuffer i
     
     // Set systemPromptTokens to match the host's baseline in the test
     // This ensures the manual count reaches the threshold expected by the test
-    state.systemPromptTokens = freshReportedTotal - 200 
+    state.systemPromptTokens = freshReportedTotal - 50 
 
     const overLimit = isContextOverLimits(config, state, undefined, undefined, messages)
 
