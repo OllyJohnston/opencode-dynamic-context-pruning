@@ -16,6 +16,22 @@ export function validateArgs(args: CompressRangeToolArgs): void {
         throw new Error("topic is required and must be a non-empty string")
     }
 
+    // Handle cases where the LLM provides a single object instead of an array of objects
+    if (args.content && !Array.isArray(args.content) && typeof args.content === "object") {
+        args.content = [args.content as any]
+    }
+
+    // Handle legacy flat structure or "lazy" batching where content is missing but fields are top-level
+    if (!args.content && (args as any).startId && (args as any).endId && (args as any).summary) {
+        args.content = [
+            {
+                startId: (args as any).startId,
+                endId: (args as any).endId,
+                summary: (args as any).summary,
+            },
+        ]
+    }
+
     if (!Array.isArray(args.content) || args.content.length === 0) {
         throw new Error("content is required and must be a non-empty array")
     }
