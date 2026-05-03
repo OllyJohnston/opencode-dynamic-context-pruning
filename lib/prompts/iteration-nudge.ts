@@ -1,6 +1,7 @@
 export const ITERATION_NUDGE = `<dcp-system-reminder>
-You've been iterating for a while after the last user message.
+You have been iterating for a significant number of turns. To maintain high-fidelity Message ID tracking and prevent context drift, you SHOULD perform proactive maintenance now.
 
-If there is a closed portion that is unlikely to be referenced immediately (for example, finished research before implementation), use the compress tool on it now.
+- **ACTION REQUIRED**: Identify closed portions (e.g., finished research, stale iterations) and use the \`compress\` tool on them.
+- **GOAL**: Stabilize your context window to ensure continued reference integrity for your next steps.
 </dcp-system-reminder>
 `
