@@ -249,6 +249,7 @@ test("isContextOverLimits extends the max threshold by active summary tokens", (
     messages.push(buildPostCompactionAssistantMessage())
 
     const state = createSessionState()
+    state.systemPromptTokens = freshReportedTotal - 50
     state.lastCompaction = 2
 
     const storedSummary = wrapCompressedSummary(7, repeatedWord("summary", 120))
@@ -283,6 +284,7 @@ test("isContextOverLimits does not extend the max threshold when summaryBuffer i
     messages.push(buildPostCompactionAssistantMessage())
 
     const state = createSessionState()
+    state.systemPromptTokens = freshReportedTotal - 50
     state.lastCompaction = 2
 
     const storedSummary = wrapCompressedSummary(7, repeatedWord("summary", 120))
