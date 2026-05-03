@@ -1,7 +1,16 @@
-import type { CommandContext } from "./types"
+import type { Logger } from "../logger"
+import type { SessionState, WithParts } from "../state"
 import { resetSessionState, saveSessionState } from "../state"
 
-export async function handleResetCommand(ctx: CommandContext): Promise<void> {
+export interface ResetCommandContext {
+    client: any
+    state: SessionState
+    logger: Logger
+    sessionId: string
+    messages: WithParts[]
+}
+
+export async function handleResetCommand(ctx: ResetCommandContext): Promise<void> {
     const { state, logger, client, sessionId } = ctx
 
     resetSessionState(state)
