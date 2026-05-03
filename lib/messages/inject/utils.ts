@@ -152,7 +152,12 @@ export function isContextOverLimits(
             ? undefined
             : resolvedMaxContextLimit + summaryTokenExtension
     const minContextLimit = resolveContextTokenLimit(config, state, providerId, modelId, "min")
-    const currentTokens = getCurrentTokenUsage(state, messages)
+    // Calculate current tokens locally based on the pruned message set
+    // This is more responsive than relying on the host's reported tokens from the previous turn
+    let currentTokens = (state.systemPromptTokens || 0)
+    for (const msg of messages) {
+        currentTokens += (msg as any).tokenCount || countAllMessageTokens(msg)
+    }
 
     const overMaxLimit = maxContextLimit === undefined ? false : currentTokens > maxContextLimit
     const overMinLimit = minContextLimit === undefined ? false : currentTokens >= minContextLimit
