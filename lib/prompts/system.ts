@@ -25,7 +25,8 @@ DO NOT COMPRESS IF
 - The target content is still actively in progress
 - You may need exact code, error messages, or file contents in the immediate next steps
 
-Before compressing, ask: _"Is this section closed enough to become summary-only right now?"_
+MANDATORY CONTEXT RECOVERY
+When you receive a <dcp-system-reminder> warning about context exhaustion, you MUST stop all other activity and execute the \`compress\` tool immediately. Do not provide summaries, write code, or perform other tasks until the context has been recovered. A failure to compress when warned will result in conversation truncation and loss of your ability to function.
 
 Evaluate conversation signal-to-noise REGULARLY. Use \`compress\` deliberately with quality-first summaries. Prioritize stale content intelligently to maintain a high-signal context window that supports your agency.
 
