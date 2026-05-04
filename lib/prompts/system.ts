@@ -13,10 +13,10 @@ Evaluate these conditions before calling \`compress\`:
     - **Signal**: Final code, specific errors that led to the fix, key decisions.
     - **Noise**: Discard failed exploration paths if they exceed **2-3 turns** without a breakthrough.
 
-DO NOT COMPRESS IF
-- A tool call you just made is still "Pending" (waiting for its output). Finish the turn first, then compress.
-- You expect to reference exact text/errors from the target messages in the next turn.
-- The user has not yet confirmed the result of the exploration.
+DO NOT COMPRESS IF (WHEN TO SKIP)
+- **Mid-Flight**: Never compress while a tool call is pending. Finish your current tool call and its output first, then compress.
+- **Verification Pending**: The user's active instruction is not yet complete and verified.
+- **Reference Need**: You expect to reference exact text, error messages, or code from the target messages in the very next turn.
 
 ANTI-PATTERNS (WHAT NOT TO DO)
 - **Don't** leave half-finished tool calls. Wait for results before compressing.
