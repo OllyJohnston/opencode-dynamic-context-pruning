@@ -10,7 +10,8 @@ export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 - **startId**: Pick the first available \`mNNNN\` message ID in your history (usually \`m0001\`).
 - **The Anchor Rule**: ALWAYS use the ID of the VERY FIRST message visible at the top of your window as your \`startId\`. NEVER guess or assume what was inside a previous block. If \`m0070\` is the first thing you see, use \`m0070\`.
 - **The Incremental Rule (MANDATORY)**: Avoid redundant work. If your history already contains a block (e.g., \`b11\`), your new \`startId\` MUST be the message immediately AFTER that block. 
-  - *Example*: If \`b11\` ends at \`m0100\`, your new \`startId\` is \`m0101\`. Do not re-process \`m0001\`.
+  - *Example*: If \`b11\` ends at \`m0100\`, your new \`startId\` is \`m0101\`.
+- **NO DOUBLE-DIPPING**: You cannot use an ID for \`startId\` if it is already contained within an existing \`(bN)\` block. If \`m0001\` through \`m0038\` are in \`(b10)\`, then \`m0001\` is ILLEGAL as a \`startId\`. Use \`m0039\`.
 - **endId**: The last message in the range (must obey Safety Gap).
 - **No Guessing**: NEVER numerically increment IDs (e.g., if you see m0040, don't assume m0041 exists). Use ONLY visible tags.
 - **Exclusions**: Skip system-generated notifications (e.g., "Compressed N messages") and technical reminders.
