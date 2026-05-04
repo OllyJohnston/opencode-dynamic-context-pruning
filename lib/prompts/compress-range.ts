@@ -8,6 +8,7 @@ export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 
 2. ID SELECTION ALGORITHM
 - **startId**: Pick the first available \`mNNNN\` message ID in your history (usually \`m0001\`).
+- **Continuity**: If your history already contains a block (e.g., \`b10\`), your new \`startId\` should usually be the message immediately AFTER that block (e.g., \`m0039\`) to avoid redundant re-processing of old content.
 - **endId**: The last message in the range (must obey Safety Gap).
 - **No Guessing**: NEVER numerically increment IDs (e.g., if you see m0040, don't assume m0041 exists). Use ONLY visible tags.
 - **Exclusions**: Skip system-generated notifications (e.g., "Compressed N messages") and technical reminders.
