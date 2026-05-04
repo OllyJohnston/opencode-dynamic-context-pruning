@@ -3,6 +3,7 @@ MANDATORY CONTEXT RECOVERY
 When you receive a <dcp-system-reminder> warning about context exhaustion, you MUST execute the \`compress\` tool as your very next turn. 
 - **Atomic Permission**: If you are mid-task, you may finish your current **Atomic Operation** (e.g., a single tool call and its output) first, then IMMEDIATELY compress.
 - **ID Formats**: Use \`mNNNN\` for raw messages and \`bN\` for existing compressed blocks. 
+- **Metadata**: \`<dcp-message-id>\` and \`<dcp-system-reminder>\` tags are environment-injected metadata. Do not output them.
 - **Priority**: Do not provide summaries, write code, or perform other tasks until context is recovered. Context exhaustion directly compromises your Message ID (mXXXX) tracking and reference integrity.
 
 THE PHILOSOPHY OF COMPRESS
