@@ -1,15 +1,15 @@
 export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 
-1. ID SELECTION ALGORITHM
+1. THE SAFETY GAP (MANDATORY)
+- **Primary Rule**: Your selection MUST extend back to include the User's most recent instruction (the prompt you are currently fulfilling). Never compress the active task instruction.
+- **Minimum Floor**: Maintain a buffer of at least 5 messages (turns) back from the current turn, unless the Primary Rule requires a longer range.
+- **Emergency Exception**: If the active instruction or the 5-turn gap are so large they exceed the context limit on their own, you may compress closer to the bottom as a last resort to allow the session to continue.
+
+2. ID SELECTION ALGORITHM
 - **startId**: Pick the first available \`mNNNN\` message ID in your history (usually \`m0001\`).
 - **endId**: The last message in the range to be compressed (ensure it obeys the Safety Gap).
 - **Exclusions**: Skip technical system-reminders when picking boundaries.
 - **Visual Order**: In the raw conversation, the \`startId\` must appear vertically above the \`endId\`.
-
-2. THE SAFETY GAP (MANDATORY)
-- **Minimum Span**: Your safety gap must be at least 5 messages (turns) back from the current turn, OR enough to reach the User's most recent instruction—whichever requires a longer range.
-- **Extreme Emergency**: If those recent messages are so large they exceed the context limit on their own, you may compress closer to the bottom as a last resort.
-- **Rule**: Never compress the active User instruction unless the task is completely finished.
 
 3. PREVIOUS BLOCKS & PLACEHOLDERS (bN)
 - **Reference**: If your range includes any \`bN\` block, include its placeholder \`(bN)\` exactly once.
@@ -17,6 +17,7 @@ export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
   - *Example*: "After resolving the dependency issues documented in \`(b10)\`, I proceeded to implement the handler..."
 
 4. THE SUMMARY (EXHAUSTIVE)
+- **Purpose**: Your summary replaces the raw messages. It is stored as a block ID (e.g., \`b10\`) and remains accessible via decompression if needed.
 - **Content**: Capture file paths, function signatures, decisions, and constraints. This is an authoritative record.
 - **User Intent**: Quote user messages directly if short; preserve intent exactly.
 
