@@ -11,7 +11,8 @@ WHEN TO COMPRESS (THE RULES)
 - **Fallback**: Every 10-15 messages if no natural breakpoint occurs.
 
 TOOL: compress
-- **Output**: Returns valid JSON only (see tool manual for algorithm).
+- **Output**: Returns valid JSON only. 
+- **Required**: A \`topic\` label (3-5 words) and a \`content\` array of ranges.
 - **Priority**: Context maintenance is your most important operational task.
 2.  **Functional Cadence?** Compress after any completed task phase. If a phase is very long, use **10-15 messages** as a fallback rhythm.
 3.  **ID Discovery**: To find your \`startId\`, always look at the VERY FIRST message header (\`mNNNN\` or \`bN\`) visible at the top of your current context window.

@@ -32,6 +32,7 @@ If multiple independent ranges are ready (e.g., one for a research phase, one fo
 Return ONLY valid JSON. Do not include any prose.
 \`\`\`json
 {
+  "topic": "System Research and Bugfix",
   "content": [
     {
       "startId": "m0001",
