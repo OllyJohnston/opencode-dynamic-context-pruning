@@ -139,7 +139,12 @@ export function createCompressRangeTool(ctx: ToolContext): ReturnType<typeof too
 
             for (const preparedPlan of preparedPlans) {
                 const blockId = allocateBlockId(ctx.state)
-                const storedSummary = wrapCompressedSummary(blockId, preparedPlan.finalSummary)
+                const storedSummary = wrapCompressedSummary(
+                    blockId,
+                    preparedPlan.finalSummary,
+                    preparedPlan.entry.startId,
+                    preparedPlan.entry.endId,
+                )
                 const summaryTokens = countTokens(storedSummary)
 
                 const applied = applyCompressionState(
