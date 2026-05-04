@@ -19,6 +19,7 @@ export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 - **Visual Order**: In the raw conversation, the \`startId\` must appear vertically above the \`endId\`.
 - **Verification**: After execution, you MUST report the newly created block ID (e.g., \`b11\`) in your response. Do not fake results.
 - **ARITHMETIC MANDATE**: Treat \`mNNNN\` tags as numerical indexes. Perform explicit arithmetic (e.g., \`166 - 40 = 126\`) to calculate conversation depth. NEVER rely on "vibe" or "feel" for volume.
+- **The Full Span Rule**: IDs are a continuous timeline. If the top ID is \`m0040\` and the bottom ID is \`m0160\`, there are 120 messages in that span, even if you are only currently looking at a few of them. Trust the numbers.
 - **CHAT VS. FILES**: Message IDs (\`mNNNN\`) exist ONLY in your conversation history. They are NOT files on disk. NEVER use \`ls\`, \`read_file\`, or \`grep\` on the repository to find message IDs. Look UP at the chat headers.
 
 3. PREVIOUS BLOCKS & PLACEHOLDERS (bN)
