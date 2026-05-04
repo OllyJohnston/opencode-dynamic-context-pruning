@@ -21,5 +21,5 @@ SUMMARY QUALITY CALIBRATION
 
 ID & METADATA
 - **IDs**: Use exactly as seen in headers (\`mNNNN\` / \`bN\`).
-- **Metadata**: Do not output \`<dcp-message-id>\` or \`<dcp-system-reminder>\` tags.
+- **Metadata**: \`<dcp-message-id>\` and \`<dcp-system-reminder>\` tags are environment-injected metadata. Do not output them.
 `
