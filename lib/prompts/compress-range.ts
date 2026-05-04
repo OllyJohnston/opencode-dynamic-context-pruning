@@ -1,9 +1,9 @@
 export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 
-1. THE SAFETY GAP (MANDATORY)
-- **Distance Rule**: Your \`endId\` MUST be an ID that appeared at least 5 messages BEFORE the current one. Count backwards from the bottom: current Turn (0), previous (1), previous (2)... go back at least 5 before picking your \`endId\`.
-- **Active Instruction**: Never compress the User's active instruction (the prompt you are currently fulfilling).
-- **System Headers**: The \`mNNNN\` tags in the system headers are REAL message IDs. Do not ignore them as "wrappers."
+- **Distance Rule**: Your \`endId\` MUST be an ID that appeared at least 5 messages BEFORE the current one. 1 Message = 1 ID Tag.
+- **MATH TEST**: If your current message is \`m0167\`, then \`167 - 5 = 162\`. Your \`endId\` cannot be higher than \`m0162\`. 
+- **Active Instruction**: Never compress the User's active instruction.
+- **System Headers**: The \`mNNNN\` tags in the system headers are REAL message IDs. Do not ignore them.
 - **Emergency Exception**: Only violate the floor if the gap itself exceeds the context limit.
 
 2. ID SELECTION ALGORITHM
