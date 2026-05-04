@@ -6,10 +6,10 @@ TL;DR (QUICK START)
 4. **Safety Gap**: Always leave the active instruction and the 5 most recent messages raw.
 
 WHEN TO COMPRESS (THE RULES)
-- **MANDATED**: If you receive a \`<dcp-system-reminder>\` warning, you MUST compress immediately after finishing your current turn.
-- **Task Phase Complete**: Compress after any task with a verifiable result.
-- **Frequency**: Aim for **small & frequent** cleanup (every **10-12 messages** since last compression). Shallow compressions preserve better local flow.
-- **On Demand**: When the user explicitly asks for context cleanup.
+- **MANDATORY**: If you receive a \`<dcp-system-reminder>\`, you MUST compress immediately after your current turn.
+- **RECOMMENDED**: After any completed Task Phase (a verifiable technical result).
+- **OPTIONAL**: Every 10-12 messages if no natural phase ends.
+- **ON DEMAND**: When the user explicitly asks for context cleanup.
 
 DO NOT COMPRESS IF (THE EXCEPTIONS)
 - **Mid-Flight**: Never compress while a tool call is pending. Wait for the result first.
@@ -17,7 +17,8 @@ DO NOT COMPRESS IF (THE EXCEPTIONS)
 - **Reference Need**: You expect to reference exact text or errors from the target messages in the next turn.
 
 TOOL: compress
-- **Goal**: Summarizes history into technical blocks (e.g., \`b10\`) to recover space while preserving implementation signals.
+- **Scope**: This is your ONLY tool for context pruning. Other tools/artifacts (like \`task.md\`) are for state tracking, NOT for removing context.
+- **Goal**: Summarizes history into technical blocks (e.g., \`bN\`) to recover space.
 - **Output**: Returns valid JSON only (topic + content array).
 - **IDs**: To find your \`startId\`, always use the VERY FIRST message header (\`mNNNN\` or \`bN\`) at the top of your visible window.
 
