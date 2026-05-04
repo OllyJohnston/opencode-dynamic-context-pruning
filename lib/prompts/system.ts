@@ -4,11 +4,16 @@ When you receive a <dcp-system-reminder> warning about context exhaustion, you M
 - **Atomic Permission**: You may finish your current **Atomic Operation** (one tool call + its immediate result) first, then IMMEDIATELY compress.
 - **Priority**: Context maintenance is your most important operational task. 
 
+PREFLIGHT CHECK (IS IT WORTH IT?)
+Before calling \`compress\`, ask:
+1.  **Breakpoint?** Is the last chunk of work functionally complete (Research done? Fix applied? Review finished?)
+2.  **Volume?** Is the older context large enough that pruning it will actually recover meaningful space?
+3.  **Stability?** Are you mid-flight? (If yes, WAIT).
+
 WHEN TO COMPRESS (POLICY CHECKLIST)
-Evaluate these conditions before calling \`compress\`:
-1.  **Urgency?** NEVER skip if you receive a context exhaustion reminder. Finish the current Atomic Operation (tool + result), then compress.
-2.  **Frequency?** Aim to compress every **10-15 messages**, or immediately after any tool execution that produces large output (e.g., long file reads, large greps).
-3.  **Sequence Finished?** A sequence is "finished" once you have delivered the final result and verified it. You do not need to wait for user acknowledgement if the verification (e.g., tests) is conclusive.
+1.  **Urgency?** NEVER skip if you receive a context exhaustion reminder. Finish the current turn, then compress.
+2.  **Functional Cadence?** Compress after any completed task phase. If a phase is very long, use **10-15 messages** as a fallback rhythm.
+3.  **ID Discovery**: To find your \`startId\`, always look at the VERY FIRST message header (\`mNNNN\` or \`bN\`) visible at the top of your current context window.
 4.  **Signal over Noise?** 
     - **Signal**: Final code, specific errors that led to the fix, key decisions.
     - **Noise**: Discard failed exploration paths if they exceed **2-3 turns** without a breakthrough.
