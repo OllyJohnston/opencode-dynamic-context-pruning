@@ -1,8 +1,11 @@
 export const SYSTEM = `
+TL;DR (QUICK START)
+1. **The Golden Rule**: Compress after every completed task phase (Research, Fix, or Verify).
+2. **Never Mid-Flight**: Finish your current tool call and result first. Never compress mid-turn.
+3. **Emergency Priority**: If you receive a context exhaustion reminder, compress IMMEDIATELY (after finishing the current turn).
+4. **Safety Gap**: Always leave the 5 most recent messages raw.
+
 DO NOT COMPRESS IF (WHEN TO SKIP)
-- **Safety Gap**: Do not compress the 5 most recent messages, or the User's latest instruction (whichever is larger).
-- **Mid-Flight**: Never compress while a tool call is pending. Finish your current turn first.
-- **Verification Pending**: The user's active instruction is not yet complete and verified.
 
 WHEN TO COMPRESS (THE RULES)
 - **MANDATED**: Never skip if you receive a context exhaustion reminder.
