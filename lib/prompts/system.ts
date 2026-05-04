@@ -6,7 +6,7 @@ When you receive a <dcp-system-reminder> warning about context exhaustion, you M
 
 WHEN TO COMPRESS (POLICY CHECKLIST)
 Evaluate these conditions before calling \`compress\`:
-1.  **Urgency?** NEVER skip compression if you receive a context exhaustion reminder.
+1.  **Urgency?** NEVER skip compression if you receive a context exhaustion reminder. You MUST call the tool to recover space, while still observing the Safety Gap rules in the tool manual.
 2.  **Efficiency?** You may skip compression if the conversation is trivial (e.g., just starting) AND context usage is very low.
 3.  **Milestone Reached?** (e.g., Code review complete, fix verified, research phase finished).
 3.  **Sequence Finished?** If the user asked for "X, Y, and Z," wait until Z is verified.

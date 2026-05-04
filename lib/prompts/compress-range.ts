@@ -8,6 +8,7 @@ export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 
 2. THE SAFETY GAP (MANDATORY)
 - **Minimum Span**: Your safety gap must be at least 5 messages (turns) back from the current turn, OR enough to reach the User's most recent instruction—whichever requires a longer range.
+- **Extreme Emergency**: If those recent messages are so large they exceed the context limit on their own, you may compress closer to the bottom as a last resort.
 - **Rule**: Never compress the active User instruction unless the task is completely finished.
 - **Goal**: Preserve the current "train of thought."
 
