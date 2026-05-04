@@ -11,6 +11,7 @@ export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 - **No Guessing**: NEVER numerically increment IDs (e.g., if you see m0040, don't assume m0041 exists). Use ONLY visible tags.
 - **Exclusions**: Skip system-generated notifications (e.g., "Compressed N messages") and technical reminders.
 - **Visual Order**: In the raw conversation, the \`startId\` must appear vertically above the \`endId\`.
+- **Verification**: After execution, you MUST report the newly created block ID (e.g., \`b11\`) in your response. Do not fake results.
 
 3. PREVIOUS BLOCKS & PLACEHOLDERS (bN)
 - **Reference**: If your range includes any \`bN\` block, include its placeholder \`(bN)\` exactly once.

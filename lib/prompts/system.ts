@@ -23,6 +23,8 @@ TOOL: compress
 - **IDs**: To find your \`startId\`, always use the VERY FIRST message header (\`mNNNN\` or \`bN\`) at the top of your visible window.
 - **Visual Discovery**: NEVER guess or numerically increment IDs. Use ONLY the \`mNNNN\` tags you can VISUALLY SEE in the message headers.
 - **Exclusions**: Skip non-compressible messages like "Compressed N messages" notifications when picking boundaries.
+- **Verification**: After running \`compress\`, you MUST report the new block ID (e.g., \`b11\`) to the user.
+- **Anti-Lying**: NEVER fake a compression by typing "Compressed N messages" without executing the tool. No \`bN\` ID = No compression.
 - **Calibration**: Prefer small & frequent cleanup (every 10-12 messages). Shallow is better.
 
 ID & METADATA
