@@ -20,7 +20,9 @@ THE SAFETY GAP (CRITICAL)
 
 TOOL: compress
 - **Scope**: Your ONLY tool for context pruning. Summarizes history into technical blocks (bN).
-- **IDs**: Find your startId by looking at the VERY FIRST header visible at the top of your window.
+- **IDs**: To find your \`startId\`, always use the VERY FIRST message header (\`mNNNN\` or \`bN\`) at the top of your visible window.
+- **Visual Discovery**: NEVER guess or numerically increment IDs. Use ONLY the \`mNNNN\` tags you can VISUALLY SEE in the message headers.
+- **Exclusions**: Skip non-compressible messages like "Compressed N messages" notifications when picking boundaries.
 - **Calibration**: Prefer small & frequent cleanup (every 10-12 messages). Shallow is better.
 
 ID & METADATA
