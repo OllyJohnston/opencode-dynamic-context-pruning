@@ -36,7 +36,8 @@ When you use compressed block placeholders, write the surrounding summary text s
 - Treat each placeholder as a stand-in for a full conversation segment, not as a short label.
 - Ensure transitions before and after each placeholder preserve chronology and causality.
 - Do not write text that depends on the placeholder staying literal (for example, "as noted in \`(b2)\`").
-- Your final meaning must be coherent once each placeholder is replaced with its full compressed block content.
+- **PROACTIVE WEAVING**: Weave these placeholders into your summary prose at the exact point where they occurred chronologically. Treat them as landmarks that anchor your current summary to the previous history. 
+  - *Example*: "After resolving the dependency issues documented in \`(b1)\`, I proceeded to implement the handler..."
 
 BOUNDARY IDS
 You specify boundaries by ID using the injected IDs visible in the conversation:
@@ -45,8 +46,8 @@ You specify boundaries by ID using the injected IDs visible in the conversation:
 - \`bN\` IDs identify previously compressed blocks
 
 Each message has an ID header inside XML metadata tags like \`<dcp-message-id>...</dcp-message-id>\` at the very start of the message block.
-The same ID tag appears in every tool output of the message it belongs to — each unique ID identifies one complete message.
-Treat these tags as boundary metadata only, not as tool result content.
+The same ID tag appears in every tool output of the message it belongs to.
+Treat these tags as boundary metadata only. Use the IDs exactly as they appear in the headers.
 
 Rules:
 
@@ -60,6 +61,7 @@ When multiple independent ranges are ready and their boundaries do not overlap, 
 
 THE SAFETY GAP
 To maintain immediate context awareness, you MUST observe a safety gap when selecting your \`endId\`:
-- **5-Turn Gap**: Do not compress the 5 most recent messages in the conversation. They must remain in their raw form to preserve the current "train of thought."
-- **Active Instruction**: Never compress the User message that contains the CURRENT active instruction unless you have completely finished that task. If the current instruction is older than 5 turns, your safety gap must extend back to include it.
+- **Precedence**: Your safety gap must be at least 5 messages, OR must extend back to include the latest User prompt, whichever is larger.
+- **Goal**: Preserve the current "train of thought" and ensure the active instruction is always visible in its raw form.
+- **Active Instruction**: Never compress the User message that contains the CURRENT active instruction unless you have completely finished that task.
 `

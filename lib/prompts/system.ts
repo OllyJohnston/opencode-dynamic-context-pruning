@@ -14,6 +14,7 @@ A section is genuinely closed and the raw conversation has served its purpose. E
 
 DO NOT COMPRESS IF
 - The target content is still actively in progress (e.g., tool calls are pending).
+- The user's active instruction spans multiple planned actions. Wait until the **full sequence** is complete and verified before compressing.
 - You expect to reference the exact text, error messages, or code from the target messages in your immediate next steps.
 - The user has not yet confirmed the result of the exploration.
 
