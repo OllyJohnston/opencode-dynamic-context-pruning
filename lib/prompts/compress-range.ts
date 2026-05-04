@@ -41,7 +41,12 @@ If multiple independent ranges are ready (e.g., one for a research phase, one fo
 - **In-Progress**: Don't compress a task sequence that is still being verified.
 - **Reference Need**: Don't compress if you need exact text/errors from those messages in your immediate next turn.
 
-7. EXAMPLE OUTPUT FORMAT
+7. THE ARRAY RULE (MANDATORY)
+The \`content\` field MUST be an array \`[]\`, even if you only have one range.
+- **WRONG**: \`"content": { "startId": "m0001", ... }\`
+- **RIGHT**: \`"content": [{ "startId": "m0001", ... }]\`
+
+8. EXAMPLE OUTPUT FORMAT
 Return ONLY valid JSON. Do not include any prose.
 \`\`\`json
 {

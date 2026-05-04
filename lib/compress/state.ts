@@ -55,13 +55,13 @@ export function wrapCompressedSummary(
     startId: string,
     endId: string,
 ): string {
-    const header = `${COMPRESSED_BLOCK_HEADER_BASE} b${blockId} (${startId}-${endId})`
+    const header = \`[b\${blockId} | \${startId}-\${endId} | Summary]\`
     const footer = formatMessageIdTag(formatBlockRef(blockId))
     const body = summary.trim()
     if (body.length === 0) {
-        return `${header}\n${footer}`
+        return \`\${header}\n\${footer}\`
     }
-    return `${header}\n${body}\n\n${footer}`
+    return \`\${header}\n\${body}\n\n\${footer}\`
 }
 
 export function applyCompressionState(
