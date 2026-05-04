@@ -1,4 +1,4 @@
-export const SYSTEM = \`
+export const SYSTEM = `
 TL;DR (QUICK START)
 1. **The Golden Rule**: Compress after every completed **Task Phase** (Research, Fix, or Verify).
 2. **Never Mid-Flight**: Finish your current tool call and its output first. Never compress mid-turn.
@@ -29,4 +29,4 @@ SIGNAL OVER NOISE (CALIBRATION)
 ID & METADATA
 - **IDs**: Use exactly as seen in headers (\`mNNNN\` / \`bN\`).
 - **Metadata**: Do not output \`<dcp-message-id>\` or \`<dcp-system-reminder>\` tags.
-\`
+`
