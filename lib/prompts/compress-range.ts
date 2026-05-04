@@ -14,6 +14,7 @@ export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 - **Exclusions**: Skip system-generated notifications (e.g., "Compressed N messages") and technical reminders.
 - **Visual Order**: In the raw conversation, the \`startId\` must appear vertically above the \`endId\`.
 - **Verification**: After execution, you MUST report the newly created block ID (e.g., \`b11\`) in your response. Do not fake results.
+- **ARITHMETIC MANDATE**: Treat \`mNNNN\` tags as numerical indexes. Perform explicit arithmetic (e.g., \`166 - 40 = 126\`) to calculate conversation depth. NEVER rely on "vibe" or "feel" for volume.
 
 3. PREVIOUS BLOCKS & PLACEHOLDERS (bN)
 - **Reference**: If your range includes any \`bN\` block, include its placeholder \`(bN)\` exactly once.
