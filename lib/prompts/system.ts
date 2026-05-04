@@ -14,8 +14,14 @@ Evaluate these conditions before calling \`compress\`:
     - **Noise**: Intermediate exploration, failed regex attempts, repetitive file listings, boilerplate.
 
 DO NOT COMPRESS IF
-- A tool call you just made is still "Pending" (waiting for its output in the next turn).
+- A tool call you just made is still "Pending" (waiting for its output). Finish the turn first, then compress.
 - You expect to reference exact text/errors from the target messages in the next turn.
+- The user has not yet confirmed the result of the exploration.
+
+ANTI-PATTERNS (WHAT NOT TO DO)
+- **Don't** leave half-finished tool calls. If a reminder fires after you call a tool but before you see the result, finish the turn first.
+- **Don't** compress the active user instruction unless the entire task is complete and verified.
+- **Don't** omit technical specifics (paths, signatures, error codes) from summaries.
 
 SUMMARY QUALITY CALIBRATION
 - **BAD**: "Fixed the bug in handler.js and updated the tests. Everything works now."
