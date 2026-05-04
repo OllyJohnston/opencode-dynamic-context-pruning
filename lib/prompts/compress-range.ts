@@ -1,67 +1,27 @@
-export const COMPRESS_RANGE = `Collapse a range in the conversation into a detailed summary.
+export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 
-THE SUMMARY
-Your summary must be EXHAUSTIVE. Capture file paths, function signatures, decisions made, constraints discovered, key findings... EVERYTHING that maintains context integrity. This is not a brief note - it is an authoritative record so faithful that the original conversation adds no value.
+1. START ID ANCHOR
+- Identify the most recent summary block (e.g., \`bN\`) and its \`endId\`.
+- Your \`startId\` is the first message ID containing actual content after that block.
+- Skip "Compression Successful" or technical notifications.
 
-USER INTENT FIDELITY
-When the compressed range includes user messages, preserve the user's intent with extra care. Do not change scope, constraints, priorities, acceptance criteria, or requested outcomes.
-Directly quote user messages when they are short enough to include safely. Direct quotes are preferred when they best preserve exact meaning.
+2. THE SAFETY GAP (MANDATORY)
+To maintain immediate context awareness, you MUST observe these boundaries for your \`endId\`:
+- **Precedence**: Your safety gap must be at least 5 messages (turns), OR must extend back to include the latest User prompt, whichever is larger.
+- **Rule**: Never compress the active User instruction unless the task is completely finished.
+- **Goal**: Preserve the current "train of thought."
 
-Yet be LEAN. Strip away the noise: failed attempts that led nowhere, verbose tool outputs, back-and-forth exploration. What remains should be pure signal - golden nuggets of detail that preserve full understanding with zero ambiguity.
+3. THE SUMMARY (EXHAUSTIVE)
+- **Content**: Capture file paths, function signatures, decisions, and constraints. This is an authoritative record.
+- **Lean**: Strip failed attempts and verbose tool noise. 
+- **User Intent**: Quote user messages directly if short; preserve intent exactly.
 
-COMPRESSED BLOCK PLACEHOLDERS
-When the selected range includes previously compressed blocks, use this exact placeholder format when referencing one:
+4. PREVIOUS BLOCKS & PLACEHOLDERS (bN)
+- **Reference**: If your range includes any \`bN\` block, include its placeholder \`(bN)\` exactly once.
+- **Weaving**: Weave \`(bN)\` placeholders into your summary prose chronologically as landmarks.
+  - *Example*: "After the fixes in \`(b1)\`, I implemented the handler..."
+- **Flow**: Ensure prose remains coherent once \`(bN)\` is replaced with its full content.
 
-- \`(bN)\`
-
-Compressed block sections in context are clearly marked with a header:
-
-- \`[Compressed conversation section]\`
-
-Compressed block IDs always use the \`bN\` form (never \`mNNNN\`) and are represented in the same XML metadata tag format.
-
-Rules:
-
-- Include every required block placeholder exactly once.
-- Do not invent placeholders for blocks outside the selected range.
-- Treat \`(bN)\` placeholders as RESERVED TOKENS. Do not emit \`(bN)\` text anywhere except intentional placeholders.
-- If you need to mention a block in prose, use plain text like \`compressed bN\` (not as a placeholder).
-- Preflight check before finalizing: the set of \`(bN)\` placeholders in your summary must exactly match the required set, with no duplicates.
-
-These placeholders are semantic references. They will be replaced with the full stored compressed block content when the tool processes your output.
-
-FLOW PRESERVATION WITH PLACEHOLDERS
-When you use compressed block placeholders, write the surrounding summary text so it still reads correctly AFTER placeholder expansion.
-
-- Treat each placeholder as a stand-in for a full conversation segment, not as a short label.
-- Ensure transitions before and after each placeholder preserve chronology and causality.
-- Do not write text that depends on the placeholder staying literal (for example, "as noted in \`(b2)\`").
-- **PROACTIVE WEAVING**: Weave these placeholders into your summary prose at the exact point where they occurred chronologically. Treat them as landmarks that anchor your current summary to the previous history. 
-  - *Example*: "After resolving the dependency issues documented in \`(b1)\`, I proceeded to implement the handler..."
-
-BOUNDARY IDS
-You specify boundaries by ID using the injected IDs visible in the conversation:
-
-- \`mNNNN\` IDs identify raw messages
-- \`bN\` IDs identify previously compressed blocks
-
-Each message has an ID header inside XML metadata tags like \`<dcp-message-id>...</dcp-message-id>\` at the very start of the message block.
-The same ID tag appears in every tool output of the message it belongs to.
-Treat these tags as boundary metadata only. Use the IDs exactly as they appear in the headers.
-
-Rules:
-
-- **PRIORITY: startId Anchor (The Visual Filter)**:
-  - Identify the most recent summary block (e.g., \`bN\`) and note its \`endId\`.
-  - Look at the messages immediately following that block.
-  - **The Rule**: Your \`startId\` is the first message ID containing actual conversation, code, or tool outputs. Skip "Compression Successful" or technical notifications.
-
-BATCHING
-When multiple independent ranges are ready and their boundaries do not overlap, include all of them as separate entries in the \`content\` array of a single tool call. Each entry should have its own \`startId\`, \`endId\`, and \`summary\`.
-
-THE SAFETY GAP
-To maintain immediate context awareness, you MUST observe a safety gap when selecting your \`endId\`:
-- **Precedence**: Your safety gap must be at least 5 messages, OR must extend back to include the latest User prompt, whichever is larger.
-- **Goal**: Preserve the current "train of thought" and ensure the active instruction is always visible in its raw form.
-- **Active Instruction**: Never compress the User message that contains the CURRENT active instruction unless you have completely finished that task.
+5. BATCHING
+If multiple independent ranges are ready, include them as separate entries in the \`content\` array.
 `
