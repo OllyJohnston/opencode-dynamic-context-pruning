@@ -1,17 +1,17 @@
 export const SYSTEM = `
-MANDATORY CONTEXT RECOVERY
-When you receive a <dcp-system-reminder> warning about context exhaustion, you MUST execute the \`compress\` tool as your very next turn. 
-- **Atomic Permission**: You may finish your current **Atomic Operation** (one tool call + its immediate result) first, then IMMEDIATELY compress.
-- **Priority**: Context maintenance is your most important operational task. 
+DO NOT COMPRESS IF (WHEN TO SKIP)
+- **Safety Gap**: Do not compress the 5 most recent messages, or the User's latest instruction (whichever is larger).
+- **Mid-Flight**: Never compress while a tool call is pending. Finish your current turn first.
+- **Verification Pending**: The user's active instruction is not yet complete and verified.
+
+TOOL: compress
+- **Output**: Returns valid JSON only (see tool manual for algorithm).
+- **Priority**: NEVER skip if you receive a context exhaustion reminder. Finish the current turn, then compress.
 
 PREFLIGHT CHECK (IS IT WORTH IT?)
 Before calling \`compress\`, ask:
-1.  **Breakpoint?** Is the last chunk of work functionally complete (Research done? Fix applied? Review finished?)
-2.  **Volume?** Is the older context large enough that pruning it will actually recover meaningful space?
-3.  **Stability?** Are you mid-flight? (If yes, WAIT).
-
-WHEN TO COMPRESS (POLICY CHECKLIST)
-1.  **Urgency?** NEVER skip if you receive a context exhaustion reminder. Finish the current turn, then compress.
+1.  **Breakpoint?** Is the last chunk of work functionally complete?
+2.  **Volume?** Will pruning this recover meaningful space?
 2.  **Functional Cadence?** Compress after any completed task phase. If a phase is very long, use **10-15 messages** as a fallback rhythm.
 3.  **ID Discovery**: To find your \`startId\`, always look at the VERY FIRST message header (\`mNNNN\` or \`bN\`) visible at the top of your current context window.
 4.  **Signal over Noise?** 
