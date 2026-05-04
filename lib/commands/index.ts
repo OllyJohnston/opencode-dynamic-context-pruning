@@ -7,6 +7,5 @@ export {
     handleManualTriggerCommand,
 } from "./manual"
 export { handleRecompressCommand } from "./recompress"
-export { handleResetCommand } from "./reset"
 export { handleStatsCommand } from "./stats"
 export { handleSweepCommand } from "./sweep"
