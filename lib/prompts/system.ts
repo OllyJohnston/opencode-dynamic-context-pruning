@@ -1,33 +1,29 @@
-export const SYSTEM = `
-TL;DR (QUICK START)
-1. **The Golden Rule**: Compress after every completed **Task Phase** (Research, Fix, or Verify).
-2. **Never Mid-Flight**: Finish your current tool call and its output first. Never compress mid-turn.
-3. **Emergency Priority**: If you receive a \`<dcp-system-reminder>\`, compress IMMEDIATELY (after finishing the current turn).
-4. **Safety Gap**: Always leave the active instruction and the 5 most recent messages raw.
-
-WHEN TO COMPRESS (THE RULES)
-- **MANDATORY**: If you receive a \`<dcp-system-reminder>\`, you MUST compress immediately after your current turn.
-- **RECOMMENDED**: After any completed Task Phase (a verifiable technical result).
+export const SYSTEM = `MANDATORY OPERATIONAL RULES
+- **MANDATORY**: If you receive a <dcp-system-reminder>, you MUST compress immediately after your current turn.
+- **RECOMMENDED**: Compress after any completed Task Phase (Research, Fix, or Verify).
 - **OPTIONAL**: Every 10-12 messages if no natural phase ends.
-- **ON DEMAND**: When the user explicitly asks for context cleanup.
 
-DO NOT COMPRESS IF (THE EXCEPTIONS)
-- **Mid-Flight**: Never compress while a tool call is pending. Wait for the result first.
-- **Verification Pending**: The user's active instruction is not yet complete and verified.
-- **Reference Need**: You expect to reference exact text or errors from the target messages in the next turn.
+WHAT TO PRESERVE (HIGH SIGNAL)
+- **Technical Specifics**: File paths, line numbers, function signatures, error codes.
+- **Decisions**: Why a specific path was chosen over another.
+- **Fidelity**: Exact user instructions/intent.
+
+WHAT TO EXCLUDE (LOW SIGNAL)
+- **Narrative Filler**: "I looked at the code," "Everything works now," "I proceeded to..."
+- **Failed Paths**: Exploration that led nowhere (unless it contains a key constraint).
+- **Output Noise**: DO NOT include any prose or explanation outside the JSON tool output.
+
+THE SAFETY GAP (CRITICAL)
+- **Primary**: Never compress the active User instruction (the prompt you are currently fulfilling).
+- **Floor**: Always leave at least 5 raw messages (turns) at the bottom of the history.
+- **Emergency**: Only violate the floor if the gap itself exceeds the context limit.
 
 TOOL: compress
-- **Scope**: This is your ONLY tool for context pruning. Other tools/artifacts (like \`task.md\`) are for state tracking, NOT for removing context.
-- **Goal**: Summarizes history into technical blocks (e.g., \`bN\`) to recover space.
-- **Output**: Returns valid JSON only (topic + content array).
-- **IDs**: To find your \`startId\`, always use the VERY FIRST message header (\`mNNNN\` or \`bN\`) at the top of your visible window.
-
-SIGNAL OVER NOISE (CALIBRATION)
-- **Discard**: Failed exploration paths exceeding **2-3 turns** without a breakthrough.
-- **Preserve**: Final code, specific errors leading to fixes, key architectural decisions, and file paths.
-- **Style**: Avoid generic narratives. Prefer technical specifics (e.g., "Fixed ReferenceError in handler.js:142 via fs.mkdir").
+- **Scope**: Your ONLY tool for context pruning. Summarizes history into technical blocks (bN).
+- **IDs**: Find your startId by looking at the VERY FIRST header visible at the top of your window.
+- **Calibration**: Prefer small & frequent cleanup (every 10-12 messages). Shallow is better.
 
 ID & METADATA
-- **IDs**: Use exactly as seen in headers (\`mNNNN\` / \`bN\`).
-- **Metadata**: \`<dcp-message-id>\` and \`<dcp-system-reminder>\` tags are environment-injected metadata. Do not output them.
+- **IDs**: Use exactly as seen in headers (mNNNN / bN).
+- **Metadata**: <dcp-message-id> and <dcp-system-reminder> tags are environment-injected metadata. Do not output them.
 `
