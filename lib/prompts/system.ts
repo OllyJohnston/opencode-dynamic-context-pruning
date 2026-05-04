@@ -7,8 +7,8 @@ TL;DR (QUICK START)
 
 WHEN TO COMPRESS (THE RULES)
 - **MANDATED**: If you receive a \`<dcp-system-reminder>\` warning, you MUST compress immediately after finishing your current turn.
-- **Task Phase Complete**: A "Phase" is any task that produces a verifiable result (e.g., Bug Fixed, Tests Passed, Section Documented).
-- **Fallback Rhythm**: If no phase ends, compress every **10-15 messages since your last compression**.
+- **Task Phase Complete**: Compress after any task with a verifiable result.
+- **Frequency**: Aim for **small & frequent** cleanup (every **10-12 messages** since last compression). Shallow compressions preserve better local flow.
 - **On Demand**: When the user explicitly asks for context cleanup.
 
 DO NOT COMPRESS IF (THE EXCEPTIONS)

@@ -17,9 +17,11 @@ export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
   - *Example*: "After resolving the dependency issues documented in \`(b10)\`, I proceeded to implement the handler..."
 
 4. THE SUMMARY (EXHAUSTIVE)
-- **Purpose**: Your summary replaces the raw messages. It is stored as a block ID (e.g., \`b10\`) and remains accessible via decompression if needed.
-- **Content**: Capture file paths, function signatures, decisions, and constraints. This is an authoritative record.
-- **User Intent**: Quote user messages directly if short; preserve intent exactly.
+- **Purpose**: Your summary replaces raw messages. Stored as \`bN\`.
+- **Content**: Capture paths, signatures, decisions. **NO narrative filler.**
+- **Calibration Example**:
+  - **BAD**: "I looked at the code, found a bug in the directory logic, and fixed it. I then ran the tests and they passed."
+  - **GOOD**: "Fixed \`ReferenceError\` in \`lib/utils.ts:142\`. Implemented recursive directory creation via \`fs.mkdir(path, { recursive: true })\`. Verified via \`npm test\` (77/77 passing)."
 
 5. BATCHING
 If multiple independent ranges are ready (e.g., one for a research phase, one for a coding phase), include them as separate entries in the \`content\` array.
