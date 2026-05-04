@@ -6,13 +6,12 @@ When you receive a <dcp-system-reminder> warning about context exhaustion, you M
 
 WHEN TO COMPRESS (POLICY CHECKLIST)
 Evaluate these conditions before calling \`compress\`:
-1.  **Urgency?** NEVER skip compression if you receive a context exhaustion reminder. You MUST call the tool to recover space, while still observing the Safety Gap rules in the tool manual.
-2.  **Efficiency?** You may skip compression if the conversation is trivial (e.g., just starting) AND context usage is very low.
-3.  **Milestone Reached?** (e.g., Code review complete, fix verified, research phase finished).
-3.  **Sequence Finished?** If the user asked for "X, Y, and Z," wait until Z is verified.
+1.  **Urgency?** NEVER skip if you receive a context exhaustion reminder. Finish the current Atomic Operation (tool + result), then compress.
+2.  **Frequency?** Aim to compress every **20-30 messages**, or immediately after any multi-turn task sequence (e.g., Research → Fix → Verify).
+3.  **Sequence Finished?** A sequence is "finished" once you have delivered the final result and verified it. You do not need to wait for user acknowledgement if the verification (e.g., tests) is conclusive.
 4.  **Signal over Noise?** 
-    - **Signal**: Final code, specific errors that led to the fix, key decisions, file paths.
-    - **Noise**: Intermediate exploration, failed tool results, repetitive boilerplate.
+    - **Signal**: Final code, specific errors that led to the fix, key decisions.
+    - **Noise**: Discard failed exploration paths if they exceed **2-3 turns** without a breakthrough.
 
 DO NOT COMPRESS IF
 - A tool call you just made is still "Pending" (waiting for its output). Finish the turn first, then compress.
