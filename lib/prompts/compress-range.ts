@@ -1,9 +1,10 @@
 export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 
 1. THE SAFETY GAP (MANDATORY)
-- **Primary Rule**: Your selection MUST extend back to include the User's most recent instruction (the prompt you are currently fulfilling). Never compress the active task instruction.
-- **Minimum Floor**: Maintain a buffer of at least 5 messages (turns) back from the current turn, unless the Primary Rule requires a longer range.
-- **Emergency Exception**: If the active instruction or the 5-turn gap are so large they exceed the context limit on their own, you may compress closer to the bottom as a last resort to allow the session to continue.
+- **Distance Rule**: Your \`endId\` MUST be an ID that appeared at least 5 messages BEFORE the current one. Count backwards from the bottom: current Turn (0), previous (1), previous (2)... go back at least 5 before picking your \`endId\`.
+- **Active Instruction**: Never compress the User's active instruction (the prompt you are currently fulfilling).
+- **System Headers**: The \`mNNNN\` tags in the system headers are REAL message IDs. Do not ignore them as "wrappers."
+- **Emergency Exception**: Only violate the floor if the gap itself exceeds the context limit.
 
 2. ID SELECTION ALGORITHM
 - **startId**: Pick the first available \`mNNNN\` message ID in your history (usually \`m0001\`).
