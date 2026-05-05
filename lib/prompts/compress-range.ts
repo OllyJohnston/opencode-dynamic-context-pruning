@@ -5,6 +5,7 @@ export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 - **Active Instruction**: Never compress the User's active instruction.
 - **System Headers**: The \`mNNNN\` tags in the system headers are REAL message IDs. Do not ignore them.
 - **Emergency Exception**: Only violate the floor if the gap itself exceeds the context limit.
+- **PRIORITY MANDATE**: If you see a \`<dcp-system-reminder>\`, you MUST prioritize compression above ALL other work. Failure to compress when instructed will cause message IDs to drift and eventually corrupt the session. Do not write code or provide answers until you have compressed.
 
 2. ID SELECTION ALGORITHM
 - **startId**: Pick the first available \`mNNNN\` message ID in your history (usually \`m0001\`).

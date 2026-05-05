@@ -228,15 +228,16 @@ function injectAnchoredNudge(message: WithParts, nudgeText: string): void {
     }
 
     if (message.info.role === "user") {
-        for (const part of message.parts) {
+        for (let i = message.parts.length - 1; i >= 0; i--) {
+            const part = message.parts[i]
             if (part.type === "text") {
-                if (prependToTextPart(part, nudgeText)) {
+                if (appendToTextPart(part, nudgeText)) {
                     return
                 }
             }
         }
 
-        message.parts.unshift(createSyntheticTextPart(message, nudgeText))
+        message.parts.push(createSyntheticTextPart(message, nudgeText))
         return
     }
 
