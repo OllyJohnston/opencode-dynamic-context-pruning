@@ -6,6 +6,7 @@ import {
     renderMessagePriorityGuidance,
 } from "../../prompts/extensions/nudge"
 import type { RuntimePrompts } from "../../prompts/store"
+import type { Logger } from "../../logger"
 import type { UserMessage } from "@opencode-ai/sdk/v2"
 import {
     type CompressionPriorityMap,
@@ -136,6 +137,7 @@ export function isContextOverLimits(
     providerId: string | undefined,
     modelId: string | undefined,
     messages: WithParts[],
+    logger: Logger,
 ) {
     const summaryTokenExtension = config.compress.summaryBuffer
         ? getActiveSummaryTokenUsage(state)
@@ -169,6 +171,24 @@ export function isContextOverLimits(
 
     const overMaxLimit = maxContextLimit === undefined ? false : currentTokens > maxContextLimit
     const overMinLimit = minContextLimit === undefined ? false : currentTokens >= minContextLimit
+
+    if (overMinLimit || overMaxLimit) {
+        logger.debug("Context limit check", {
+            currentTokens,
+            maxContextLimit,
+            minContextLimit,
+            overMaxLimit,
+            overMinLimit,
+            modelContextLimit: state.modelContextLimit,
+        })
+
+        if (config.debug) {
+            // Use a slight delay to avoid clashing with other toasts
+            setTimeout(() => {
+                logger.info(`DCP Debug: ${currentTokens}/${maxContextLimit} tokens (${Math.round(currentTokens / (state.modelContextLimit || 1) * 100)}%)`)
+            }, 1000)
+        }
+    }
 
     return {
         overMaxLimit,

@@ -67,6 +67,7 @@ export const injectCompressNudges = (
         providerId,
         modelId,
         messages,
+        logger,
     )
 
     if (!overMinLimit) {
