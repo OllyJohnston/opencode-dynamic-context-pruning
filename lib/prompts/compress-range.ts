@@ -69,7 +69,7 @@ Return ONLY valid JSON. Do not include any prose.
 \`\`\`
 
 9. NO MANUAL BLOCKS (ANTI-HALLUCINATION)
-- **NEVER** write block markers like `<bN>` or `(bN)` in your prose unless you are referencing an ALREADY EXISTING block from your history.
+- **NEVER** write block markers like \`<bN>\` or \`(bN)\` in your prose unless you are referencing an ALREADY EXISTING block from your history.
 - **NEVER** fake a compression by claiming you have "preserved" or "archived" messages in a new block without calling the \`compress\` tool.
 - Block IDs (like \`b15\`) are ONLY assigned by the system. If you haven't received a tool output confirming a new block ID, that block DOES NOT EXIST.
 - **DO NOT** use the \`bN\` format as a decorative tag. It is a technical coordinate.
