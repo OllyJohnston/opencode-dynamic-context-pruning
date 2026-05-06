@@ -34,16 +34,16 @@ function buildConfig(maxContextLimit: number, minContextLimit = 1): PluginConfig
         },
         protectedFilePatterns: [],
         compress: {
-            mode: "message",
+            mode: "range",
             permission: "allow",
             showCompression: false,
             summaryBuffer: true,
             maxContextLimit,
             minContextLimit,
-            nudgeFrequency: 5,
-            iterationNudgeThreshold: 15,
-            nudgeForce: "soft",
-            protectedTools: ["task"],
+            nudgeFrequency: 2,
+            iterationNudgeThreshold: 3,
+            nudgeForce: "strong",
+            protectedTools: [],
             protectUserMessages: false,
         },
         strategies: {
@@ -60,143 +60,64 @@ function buildConfig(maxContextLimit: number, minContextLimit = 1): PluginConfig
     }
 }
 
-function textPart(messageID: string, sessionID: string, id: string, text: string) {
-    return {
-        id,
-        messageID,
-        sessionID,
-        type: "text" as const,
-        text,
-    }
-}
-
-function repeatedWord(word: string, count: number): string {
-    return Array.from({ length: count }, () => word).join(" ")
-}
-
 function buildCompactedMessages(): WithParts[] {
-    const sessionID = "ses_compaction_token_usage"
-
     return [
         {
             info: {
-                id: "msg-user-summary",
+                id: "m0001",
                 role: "user",
-                sessionID,
-                agent: "assistant",
                 time: { created: 1 },
-            } as WithParts["info"],
-            parts: [
-                textPart(
-                    "msg-user-summary",
-                    sessionID,
-                    "msg-user-summary-part",
-                    `[Compressed conversation section]\n${repeatedWord("summary", 120)}`,
-                ),
-            ],
+                parts: [{ type: "text", text: "Hello" }],
+            },
+            parts: [{ type: "text", text: "Hello" }],
         },
         {
             info: {
-                id: "msg-assistant-summary",
+                id: "m0002",
                 role: "assistant",
-                sessionID,
-                agent: "assistant",
-                summary: true,
                 time: { created: 2 },
-                tokens: {
-                    input: 86000,
-                    output: 1200,
-                    reasoning: 300,
-                    cache: {
-                        read: 5000,
-                        write: 0,
-                    },
-                },
-            } as WithParts["info"],
-            parts: [
-                textPart(
-                    "msg-assistant-summary",
-                    sessionID,
-                    "msg-assistant-summary-part",
-                    `Compaction summary. ${repeatedWord("carry", 180)}`,
-                ),
-            ],
+                parts: [{ type: "text", text: "Hi" }],
+                tokens: { input: 10, output: 5 },
+            },
+            parts: [{ type: "text", text: "Hi" }],
         },
-        {
-            info: {
-                id: "msg-user-follow-up",
-                role: "user",
-                sessionID,
-                agent: "assistant",
-                time: { created: 3 },
-            } as WithParts["info"],
-            parts: [
-                textPart(
-                    "msg-user-follow-up",
-                    sessionID,
-                    "msg-user-follow-up-part",
-                    `Continue from here. ${repeatedWord("next", 40)}`,
-                ),
-            ],
-        },
-    ]
+    ] as any
 }
 
 function buildPostCompactionAssistantMessage(): WithParts {
-    const sessionID = "ses_compaction_token_usage"
-
     return {
         info: {
-            id: "msg-assistant-post-compaction",
+            id: "m0003",
             role: "assistant",
-            sessionID,
-            agent: "assistant",
-            time: { created: 4 },
+            time: { created: 3 },
+            parts: [{ type: "text", text: "New message" }],
             tokens: {
                 input: 2400,
                 output: 600,
                 reasoning: 150,
-                cache: {
-                    read: 300,
-                    write: 0,
-                },
+                cache: { read: 300, write: 0 },
             },
-        } as WithParts["info"],
-        parts: [
-            textPart(
-                "msg-assistant-post-compaction",
-                sessionID,
-                "msg-assistant-post-compaction-part",
-                `Fresh post-compaction reply. ${repeatedWord("done", 60)}`,
-            ),
-        ],
-    }
+        },
+        parts: [{ type: "text", text: "New message" }],
+    } as any
 }
 
-function createActiveBlock(
-    blockId: number,
-    summary: string,
-    summaryTokens: number,
-): CompressionBlock {
+function repeatedWord(word: string, count: number): string {
+    return Array(count).fill(word).join(" ")
+}
+
+function createActiveBlock(blockId: number, summary: string, compressedTokens: number): CompressionBlock {
     return {
         blockId,
-        runId: blockId,
         active: true,
-        deactivatedByUser: false,
-        compressedTokens: 0,
-        summaryTokens,
-        mode: "message",
-        topic: `Summary ${blockId}`,
-        batchTopic: `Summary ${blockId}`,
-        startId: "m0001",
-        endId: "m0001",
-        anchorMessageId: `msg-${blockId}`,
-        compressMessageId: `compress-${blockId}`,
-        includedBlockIds: [],
+        anchorMessageId: "m0001",
+        compressMessageId: "m0002",
+        startMessageId: "m0001",
+        endMessageId: "m0002",
+        rangeDescription: "m0001-m0002",
         consumedBlockIds: [],
-        parentBlockIds: [],
-        directMessageIds: [],
-        directToolIds: [],
+        compressedTokens,
+        summaryTokens: 100,
         effectiveMessageIds: [],
         effectiveToolIds: [],
         createdAt: blockId,
@@ -226,6 +147,7 @@ test("isContextOverLimits ignores stale summary totals and resumes with fresh re
         undefined,
         undefined,
         messages,
+        dummyLogger,
     )
 
     assert.equal(underLimit.overMaxLimit, false)
@@ -243,6 +165,7 @@ test("isContextOverLimits ignores stale summary totals and resumes with fresh re
         undefined,
         undefined,
         messages,
+        dummyLogger,
     )
 
     assert.equal(overLimit.overMaxLimit, true)
@@ -267,6 +190,7 @@ test("isContextOverLimits extends the max threshold by active summary tokens", (
         undefined,
         undefined,
         messages,
+        dummyLogger,
     )
 
     assert.equal(underExtendedLimit.overMaxLimit, false)
@@ -277,6 +201,7 @@ test("isContextOverLimits extends the max threshold by active summary tokens", (
         undefined,
         undefined,
         messages,
+        dummyLogger,
     )
 
     assert.equal(overExtendedLimit.overMaxLimit, true)
