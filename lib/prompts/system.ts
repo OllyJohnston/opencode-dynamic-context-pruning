@@ -24,7 +24,7 @@ TOOL: compress
 - **Visual Discovery**: NEVER guess or numerically increment IDs. Use ONLY the \`mNNNN\` tags you can VISUALLY SEE in the message headers.
 - **Exclusions**: Skip non-compressible messages like "Compressed N messages" notifications when picking boundaries.
 - **Verification**: After running \`compress\`, you MUST report the new block ID (e.g., \`b11\`) to the user.
-- **Anti-Lying**: NEVER fake a compression by typing "Compressed N messages" without executing the tool. No \`bN\` ID = No compression.
+- **Anti-Lying**: NEVER fake a compression by typing "Compressed N messages" or using block tags like \`bN\` in your prose without executing the tool. No tool execution = No compression. Manual creation of block headers is STRICTLY FORBIDDEN.
 - **Calibration**: Prefer small & frequent cleanup (every 10-12 messages). Shallow is better.
 
 ID & METADATA
