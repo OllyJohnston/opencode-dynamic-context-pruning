@@ -6,6 +6,9 @@ import { wrapCompressedSummary } from "../lib/compress/state"
 import { createSessionState, type WithParts } from "../lib/state"
 import type { CompressionBlock } from "../lib/state"
 import { getCurrentTokenUsage } from "../lib/token-utils"
+import { Logger } from "../lib/logger"
+
+const dummyLogger = new Logger(false)
 
 function buildConfig(maxContextLimit: number, minContextLimit = 1): PluginConfig {
     return {
@@ -299,7 +302,7 @@ test("isContextOverLimits does not extend the max threshold when summaryBuffer i
     // This ensures the manual count reaches the threshold expected by the test
     state.systemPromptTokens = freshReportedTotal - 50 
 
-    const overLimit = isContextOverLimits(config, state, undefined, undefined, messages)
+    const overLimit = isContextOverLimits(config, state, undefined, undefined, messages, dummyLogger)
 
     assert.equal(overLimit.overMaxLimit, true)
 })
