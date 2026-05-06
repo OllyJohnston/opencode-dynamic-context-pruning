@@ -66,7 +66,7 @@ export function findLastCompactionTimestamp(messages: WithParts[]): number {
         if (!isMessageWithInfo(msg)) {
             continue
         }
-        if (msg.info.role === "assistant" && msg.info.summary === true) {
+        if (msg.info.summary === true) {
             return msg.info.time.created
         }
     }
