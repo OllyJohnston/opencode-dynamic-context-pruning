@@ -38,6 +38,7 @@ import { type HostPermissionSnapshot } from "./host-permissions"
 import { compressPermission, syncCompressPermissionState } from "./compress-permission"
 import { checkSession, ensureSessionInitialized, saveSessionState, syncToolCache } from "./state"
 import { cacheSystemPromptTokens } from "./ui/utils"
+import { sendUnifiedNotification } from "./ui/notification"
 
 const INTERNAL_AGENT_SIGNATURES = [
     "You are a title generator",
@@ -109,6 +110,7 @@ export function createChatMessageTransformHandler(
     config: PluginConfig,
     prompts: PromptStore,
     hostPermissions: HostPermissionSnapshot,
+    workingDirectory: string,
 ) {
     return async (input: {}, output: { messages: WithParts[] }) => {
         const receivedMessages = Array.isArray(output.messages) ? output.messages.length : 0
@@ -134,7 +136,26 @@ export function createChatMessageTransformHandler(
         syncCompressionBlocks(state, logger, output.messages)
         syncToolCache(state, config, logger, output.messages)
         buildToolIdList(state, output.messages)
+        
+        const initialPrunedIds = new Set(state.prune.tools.keys())
         prune(state, logger, config, output.messages)
+        const finalPrunedIds = Array.from(state.prune.tools.keys()).filter(id => !initialPrunedIds.has(id))
+
+        if (finalPrunedIds.length > 0 && state.sessionId) {
+            await sendUnifiedNotification(
+                client,
+                logger,
+                config,
+                state,
+                state.sessionId,
+                finalPrunedIds,
+                state.toolParameters,
+                "noise",
+                {},
+                workingDirectory
+            )
+        }
+
         await injectExtendedSubAgentResults(
             client,
             state,

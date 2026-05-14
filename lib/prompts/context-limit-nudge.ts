@@ -1,4 +1,4 @@
-export const CONTEXT_LIMIT_NUDGE = `<dcp-system-reminder>
+export const CONTEXT_LIMIT_NUDGE = `\`<dcp-system-reminder>\`
 CRITICAL WARNING: CONTEXT EXHAUSTION IMMINENT
 
 You have reached or exceeded the configured context threshold. To prevent truncation and maintain high-fidelity Message ID tracking and reference integrity, you MUST use the \`compress\` tool now.
@@ -14,5 +14,6 @@ SUMMARY REQUIREMENTS
 - Your summary MUST be exhaustive and technical.
 - Preserve all key findings, file paths, and function signatures.
 - If the compressed range includes user messages, preserve user intent EXACTLY.
-</dcp-system-reminder>
+- **POST-COMPRESSION**: After calling the tool, this turn is COMPLETE. Output NO further prose or commands. STOP and wait for User confirmation.
+\`</dcp-system-reminder>\`
 `

@@ -32,7 +32,7 @@ export const createSyntheticUserMessage = (
             agent: userInfo.agent,
             model: userInfo.model,
             time: { created: now },
-            summary: true,
+            summary: undefined,
         },
         parts: [
             {

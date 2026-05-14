@@ -1,5 +1,5 @@
 export const SYSTEM = `MANDATORY OPERATIONAL RULES
-- **MANDATORY**: If you receive a <dcp-system-reminder>, you MUST compress immediately after your current turn.
+- **MANDATORY**: If you receive a \`<dcp-system-reminder>\`, you MUST compress immediately after your current turn.
 - **RECOMMENDED**: Compress after any completed Task Phase (Research, Fix, or Verify).
 - **OPTIONAL**: Every 10-12 messages if no natural phase ends.
 
@@ -26,8 +26,9 @@ TOOL: compress
 - **Verification**: After running \`compress\`, you MUST report the new block ID (e.g., \`b11\`) to the user.
 - **Anti-Lying**: NEVER fake a compression by typing "Compressed N messages" or using block tags like \`bN\` in your prose without executing the tool. No tool execution = No compression. Manual creation of block headers is STRICTLY FORBIDDEN.
 - **Calibration**: Prefer small & frequent cleanup (every 10-12 messages). Shallow is better.
+- **Halt after Compress**: After executing the \`compress\` tool, your previous turn-plan is INVALID. You MUST stop and wait for User guidance.
 
 ID & METADATA
 - **IDs**: Use exactly as seen in headers (mNNNN / bN).
-- **Metadata**: <dcp-message-id> and <dcp-system-reminder> tags are environment-injected metadata. Do not output them.
+- **Metadata**: \`<dcp-message-id>\` and \`<dcp-system-reminder>\` tags are environment-injected metadata. Do not output them.
 `
