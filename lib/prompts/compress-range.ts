@@ -54,7 +54,6 @@ Rules:
   - Identify the most recent summary block (e.g., \`bN\`) and note its \`endId\`.
   - Look at the messages immediately following that block.
   - **The Rule**: Your \`startId\` is the first message ID containing actual conversation, code, or tool outputs. Skip "Compression Successful" or technical notifications.
-- Do not invent IDs. Use only IDs that are present in context.
 
 BATCHING
 When multiple independent ranges are ready and their boundaries do not overlap, include all of them as separate entries in the \`content\` array of a single tool call. Each entry should have its own \`startId\`, \`endId\`, and \`summary\`.
