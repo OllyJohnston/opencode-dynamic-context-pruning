@@ -1,32 +1,33 @@
-export const SYSTEM = `
-TL;DR (QUICK START)
-1. **The Golden Rule**: Compress after every completed **Task Phase** (Research, Fix, or Verify).
-2. **Never Mid-Flight**: Finish your current tool call and its output first. Never compress mid-turn.
-3. **Emergency Priority**: If you receive a \`<dcp-system-reminder>\`, compress IMMEDIATELY (after finishing the current turn).
-4. **Safety Gap**: Always leave the active instruction and the 5 most recent messages raw.
+export const SYSTEM = `MANDATORY OPERATIONAL RULES
+- **MANDATORY**: If you receive a <dcp-system-reminder>, you MUST compress immediately after your current turn.
+- **RECOMMENDED**: Compress after any completed Task Phase (Research, Fix, or Verify).
+- **OPTIONAL**: Every 10-12 messages if no natural phase ends.
 
-WHEN TO COMPRESS (THE RULES)
-- **MANDATED**: If you receive a \`<dcp-system-reminder>\` warning, you MUST compress immediately after finishing your current turn.
-- **Task Phase Complete**: A "Phase" is any task that produces a verifiable result (e.g., Bug Fixed, Tests Passed, Section Documented).
-- **Fallback Rhythm**: If no phase ends, compress every **10-15 messages since your last compression**.
-- **On Demand**: When the user explicitly asks for context cleanup.
+WHAT TO PRESERVE (HIGH SIGNAL)
+- **Technical Specifics**: File paths, line numbers, function signatures, error codes.
+- **Decisions**: Why a specific path was chosen over another.
+- **Fidelity**: Exact user instructions/intent.
 
-DO NOT COMPRESS IF (THE EXCEPTIONS)
-- **Mid-Flight**: Never compress while a tool call is pending. Wait for the result first.
-- **Verification Pending**: The user's active instruction is not yet complete and verified.
-- **Reference Need**: You expect to reference exact text or errors from the target messages in the next turn.
+WHAT TO EXCLUDE (LOW SIGNAL)
+- **Narrative Filler**: "I looked at the code," "Everything works now," "I proceeded to..."
+- **Failed Paths**: Exploration that led nowhere (unless it contains a key constraint).
+- **Output Noise**: DO NOT include any prose or explanation outside the JSON tool output.
+
+THE SAFETY GAP (CRITICAL)
+- **Primary**: Never compress the active User instruction (the prompt you are currently fulfilling).
+- **Floor**: Always leave at least 5 raw messages (turns) at the bottom of the history.
+- **Emergency**: Only violate the floor if the gap itself exceeds the context limit.
 
 TOOL: compress
-- **Goal**: Summarizes history into technical blocks (e.g., \`b10\`) to recover space while preserving implementation signals.
-- **Output**: Returns valid JSON only (topic + content array).
+- **Scope**: Your ONLY tool for context pruning. Summarizes history into technical blocks (bN).
 - **IDs**: To find your \`startId\`, always use the VERY FIRST message header (\`mNNNN\` or \`bN\`) at the top of your visible window.
-
-SIGNAL OVER NOISE (CALIBRATION)
-- **Discard**: Failed exploration paths exceeding **2-3 turns** without a breakthrough.
-- **Preserve**: Final code, specific errors leading to fixes, key architectural decisions, and file paths.
-- **Style**: Avoid generic narratives. Prefer technical specifics (e.g., "Fixed ReferenceError in handler.js:142 via fs.mkdir").
+- **Visual Discovery**: NEVER guess or numerically increment IDs. Use ONLY the \`mNNNN\` tags you can VISUALLY SEE in the message headers.
+- **Exclusions**: Skip non-compressible messages like "Compressed N messages" notifications when picking boundaries.
+- **Verification**: After running \`compress\`, you MUST report the new block ID (e.g., \`b11\`) to the user.
+- **Anti-Lying**: NEVER fake a compression by typing "Compressed N messages" without executing the tool. No \`bN\` ID = No compression.
+- **Calibration**: Prefer small & frequent cleanup (every 10-12 messages). Shallow is better.
 
 ID & METADATA
-- **IDs**: Use exactly as seen in headers (\`mNNNN\` / \`bN\`).
-- **Metadata**: Do not output \`<dcp-message-id>\` or \`<dcp-system-reminder>\` tags.
+- **IDs**: Use exactly as seen in headers (mNNNN / bN).
+- **Metadata**: <dcp-message-id> and <dcp-system-reminder> tags are environment-injected metadata. Do not output them.
 `
