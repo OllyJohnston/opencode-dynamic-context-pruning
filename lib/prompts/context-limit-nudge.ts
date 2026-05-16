@@ -1,9 +1,9 @@
 export const CONTEXT_LIMIT_NUDGE = `<dcp-system-reminder>
 CRITICAL WARNING: CONTEXT EXHAUSTION IMMINENT
 
-You have reached or exceeded the configured context threshold. To prevent truncation and maintain high-fidelity retrieval, you MUST use the \`compress\` tool now.
+You have reached or exceeded the configured context threshold. To prevent truncation and maintain high-fidelity Message ID tracking and reference integrity, you MUST use the \`compress\` tool now.
 
-- **PRIORITY: COMPRESS FIRST**: You MUST call the \`compress\` tool IMMEDIATELY. Do not perform any other tasks, write any code, or provide summaries until the context has been recovered through compression. This is a dedicated cleanup turn.
+- **PRIORITY: COMPRESS FIRST**: You MUST call the \`compress\` tool IMMEDIATELY. Your ability to track Message IDs (mXXXX) and reference past work is at risk. Do not perform any other tasks, write any code, or provide summaries until the context has been recovered through compression. This is a dedicated cleanup turn.
 
 SELECTION PROCESS
 - **MANDATORY**: Start your selection from the EARLIEST available messages in the context.
