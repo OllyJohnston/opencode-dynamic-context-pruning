@@ -1,17 +1,21 @@
 export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 
-1. THE SAFETY GAP (MANDATORY)
-- **Primary Rule**: Your selection MUST extend back to include the User's most recent instruction (the prompt you are currently fulfilling). Never compress the active task instruction.
-- **Minimum Floor**: Maintain a buffer of at least 5 messages (turns) back from the current turn, unless the Primary Rule requires a longer range.
-- **Emergency Exception**: If the active instruction or the 5-turn gap are so large they exceed the context limit on their own, you may compress closer to the bottom as a last resort to allow the session to continue.
+- **Distance Rule**: Your \`endId\` MUST be an ID that appeared at least 5 messages BEFORE the current one. 1 Message = 1 ID Tag.
+- **MATH TEST**: If your current message is \`m0167\`, then \`167 - 5 = 162\`. Your \`endId\` cannot be higher than \`m0162\`. 
+- **Active Instruction**: Never compress the User's active instruction.
+- **System Headers**: The \`mNNNN\` tags in the system headers are REAL message IDs. Do not ignore them.
+- **Emergency Exception**: Only violate the floor if the gap itself exceeds the context limit.
 
 2. ID SELECTION ALGORITHM
 - **startId**: Pick the first available \`mNNNN\` message ID in your history (usually \`m0001\`).
+- **Continuity**: If your history already contains a block (e.g., \`b10\`), your new \`startId\` should usually be the message immediately AFTER that block (e.g., \`m0039\`) to avoid redundant re-processing of old content.
 - **endId**: The last message in the range (must obey Safety Gap).
 - **No Guessing**: NEVER numerically increment IDs (e.g., if you see m0040, don't assume m0041 exists). Use ONLY visible tags.
 - **Exclusions**: Skip system-generated notifications (e.g., "Compressed N messages") and technical reminders.
 - **Visual Order**: In the raw conversation, the \`startId\` must appear vertically above the \`endId\`.
 - **Verification**: After execution, you MUST report the newly created block ID (e.g., \`b11\`) in your response. Do not fake results.
+- **ARITHMETIC MANDATE**: Treat \`mNNNN\` tags as numerical indexes. Perform explicit arithmetic (e.g., \`166 - 40 = 126\`) to calculate conversation depth. NEVER rely on "vibe" or "feel" for volume.
+- **CHAT VS. FILES**: Message IDs (\`mNNNN\`) exist ONLY in your conversation history. They are NOT files on disk. NEVER use \`ls\`, \`read_file\`, or \`grep\` on the repository to find message IDs. Look UP at the chat headers.
 
 3. PREVIOUS BLOCKS & PLACEHOLDERS (bN)
 - **Reference**: If your range includes any \`bN\` block, include its placeholder \`(bN)\` exactly once.
