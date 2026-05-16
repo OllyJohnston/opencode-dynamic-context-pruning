@@ -6,12 +6,12 @@ When you receive a <dcp-system-reminder> warning about context exhaustion, you M
 
 WHEN TO COMPRESS (POLICY CHECKLIST)
 Evaluate these conditions before calling \`compress\`:
-1.  **Milestone Reached?** (e.g., Code review complete, fix verified, research phase finished).
-2.  **Sequence Finished?** If the user asked for "X, Y, and Z," wait until Z is verified.
-3.  **Instruction Complete?** Never compress the active User instruction unless the task is done.
+1.  **Urgency?** NEVER skip if you receive a context exhaustion reminder. Finish the current Atomic Operation (tool + result), then compress.
+2.  **Frequency?** Aim to compress every **10-15 messages**, or immediately after any tool execution that produces large output (e.g., long file reads, large greps).
+3.  **Sequence Finished?** A sequence is "finished" once you have delivered the final result and verified it. You do not need to wait for user acknowledgement if the verification (e.g., tests) is conclusive.
 4.  **Signal over Noise?** 
-    - **Signal**: Final code, specific errors that led to the fix, key decisions, file paths.
-    - **Noise**: Intermediate exploration, failed regex attempts, repetitive file listings, boilerplate.
+    - **Signal**: Final code, specific errors that led to the fix, key decisions.
+    - **Noise**: Discard failed exploration paths if they exceed **2-3 turns** without a breakthrough.
 
 DO NOT COMPRESS IF
 - A tool call you just made is still "Pending" (waiting for its output). Finish the turn first, then compress.
@@ -19,9 +19,9 @@ DO NOT COMPRESS IF
 - The user has not yet confirmed the result of the exploration.
 
 ANTI-PATTERNS (WHAT NOT TO DO)
-- **Don't** leave half-finished tool calls. If a reminder fires after you call a tool but before you see the result, finish the turn first.
-- **Don't** compress the active user instruction unless the entire task is complete and verified.
+- **Don't** leave half-finished tool calls. Wait for results before compressing.
 - **Don't** omit technical specifics (paths, signatures, error codes) from summaries.
+- **Don't** include prose or explanations outside the JSON output when calling \`compress\`.
 
 SUMMARY QUALITY CALIBRATION
 - **BAD**: "Fixed the bug in handler.js and updated the tests. Everything works now."
