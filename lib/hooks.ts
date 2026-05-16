@@ -13,6 +13,7 @@ import {
     stripHallucinationsFromString,
     stripStaleMetadata,
     syncCompressionBlocks,
+    computeInputBudget,
 } from "./messages"
 import { renderSystemPrompt, type PromptStore } from "./prompts"
 import { buildProtectedToolsExtension } from "./prompts/extensions/system"
@@ -58,7 +59,10 @@ export function createSystemPromptHandler(
         output: { system: string[] },
     ) => {
         if (input.model?.limit?.context) {
-            state.modelContextLimit = input.model.limit.context
+            const inputBudget = computeInputBudget(input.model.limit)
+            if (inputBudget !== undefined) {
+                state.modelContextLimit = inputBudget
+            }
             logger.debug("Cached model context limit", { limit: state.modelContextLimit })
             
             if (state.modelContextLimit < 8192) {

@@ -21,7 +21,7 @@ export function getCurrentTokenUsage(state: SessionState, messages: WithParts[])
         if (
             state.lastCompaction > 0 &&
             (msg.info.time.created < state.lastCompaction ||
-                (msg.info.summary === true && msg.info.time.created === state.lastCompaction))
+                (msg.info.summary !== true && msg.info.time.created === state.lastCompaction))
         ) {
             return 0
         }

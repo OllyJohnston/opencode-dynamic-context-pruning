@@ -171,7 +171,7 @@ test("compress range rebuilds subagent message refs after session state was rese
         },
     )
 
-    assert.equal(result, "Compressed 2 messages into [Compressed conversation section]. STOP and wait for the User to provide the next instruction.")
+    assert.equal(result, "[DCP SUCCESS] Compressed 2 messages into [Compressed conversation section]. CRITICAL: Your previous turn-plan and Message IDs (mXXXX) are now INVALID. You MUST NOT continue your previous task. STOP and wait for User guidance.")
     assert.equal(state.sessionId, sessionID)
     assert.equal(state.isSubAgent, true)
     assert.equal(state.messageIds.byRef.get("m0001"), "msg-assistant-1")
@@ -321,7 +321,7 @@ test("compress range mode batches multiple ranges into one notification", async 
         },
     )
 
-    assert.equal(result, "Compressed 2 messages into [Compressed conversation section]. STOP and wait for the User to provide the next instruction.")
+    assert.equal(result, "[DCP SUCCESS] Compressed 2 messages into [Compressed conversation section]. CRITICAL: Your previous turn-plan and Message IDs (mXXXX) are now INVALID. You MUST NOT continue your previous task. STOP and wait for User guidance.")
     assert.equal(state.prune.messages.blocksById.size, 2)
     assert.equal(toastCalls.length, 1)
     assert.match(toastCalls[0] || "", /▣ DCP \| -[^,\n]+ removed, \+[^\s\n]+ summary/)

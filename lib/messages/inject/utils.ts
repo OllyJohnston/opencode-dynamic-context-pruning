@@ -36,6 +36,20 @@ export interface LastNonIgnoredMessage {
     index: number
 }
 
+interface ModelLimit {
+    context: number
+    input?: number
+    output?: number
+}
+
+export function computeInputBudget(limit: ModelLimit): number | undefined {
+    if (!limit.context) {
+        return undefined
+    }
+
+    return limit.input ?? Math.max(0, limit.context - (limit.output ?? 0))
+}
+
 export function getNudgeFrequency(config: PluginConfig): number {
     return Math.max(1, Math.floor(config.compress.nudgeFrequency || 1))
 }
@@ -157,16 +171,43 @@ export function isContextOverLimits(
     // Calculate current tokens locally based on the pruned message set
     // This is more responsive than relying on the host's reported tokens from the previous turn.
     // We respect state.lastCompaction to ignore messages that the host has already compacted.
-    let currentTokens = (state.systemPromptTokens || 0)
-    for (const msg of messages) {
-        if (
-            state.lastCompaction > 0 &&
-            (msg.info.time.created < state.lastCompaction ||
-                (msg.info.summary === true && msg.info.time.created === state.lastCompaction))
-        ) {
-            continue
+    let currentTokens = 0
+    let foundBase = false
+
+    // Walk backwards to find the latest assistant message with a token report
+    for (let i = messages.length - 1; i >= 0; i--) {
+        const msg = messages[i]
+        const assistantInfo = msg.info as any
+        const reportedTokens =
+            (assistantInfo.tokens?.input || 0) +
+            (assistantInfo.tokens?.output || 0) +
+            (assistantInfo.tokens?.reasoning || 0) +
+            (assistantInfo.tokens?.cache?.read || 0) +
+            (assistantInfo.tokens?.cache?.write || 0)
+
+        if (msg.info.role === "assistant" && reportedTokens > 0) {
+            currentTokens = reportedTokens
+            foundBase = true
+            // Now add any messages that appeared AFTER this one
+            for (let j = i + 1; j < messages.length; j++) {
+                currentTokens += (messages[j] as any).tokenCount || countAllMessageTokens(messages[j])
+            }
+            break
         }
-        currentTokens += (msg as any).tokenCount || countAllMessageTokens(msg)
+    }
+
+    if (!foundBase) {
+        currentTokens = (state.systemPromptTokens || 0)
+        for (const msg of messages) {
+            if (
+                state.lastCompaction > 0 &&
+                (msg.info.time.created < state.lastCompaction ||
+                    (msg.info.summary !== true && msg.info.time.created === state.lastCompaction))
+            ) {
+                continue
+            }
+            currentTokens += (msg as any).tokenCount || countAllMessageTokens(msg)
+        }
     }
 
     const overMaxLimit = maxContextLimit === undefined ? false : currentTokens > maxContextLimit
@@ -185,7 +226,8 @@ export function isContextOverLimits(
         if (config.debug) {
             // Use a slight delay to avoid clashing with other toasts
             setTimeout(() => {
-                logger.info(`DCP Debug: ${currentTokens}/${maxContextLimit} tokens (${Math.round(currentTokens / (state.modelContextLimit || 1) * 100)}%)`)
+                const percent = Math.round((currentTokens / (state.modelContextLimit || 1)) * 100)
+                logger.info(`DCP Debug: ${currentTokens}/${maxContextLimit} tokens (${percent}%) [Limit Base: ${state.modelContextLimit}]`)
             }, 1000)
         }
     }
