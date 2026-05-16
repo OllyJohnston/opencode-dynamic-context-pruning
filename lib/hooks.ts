@@ -65,7 +65,7 @@ export function createSystemPromptHandler(
             }
             logger.debug("Cached model context limit", { limit: state.modelContextLimit })
             
-            if (state.modelContextLimit < 8192) {
+            if (state.modelContextLimit !== undefined && state.modelContextLimit < 8192) {
                 logger.warn("SUSPICIOUSLY SMALL CONTEXT LIMIT DETECTED. DCP may trigger premature exhaustion warnings.", { 
                     limit: state.modelContextLimit,
                     source: "host_model_limit" 
