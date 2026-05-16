@@ -15,7 +15,8 @@ import { saveSessionState } from "../../state/persistence"
 import {
     appendToTextPart,
     appendToLastTextPart,
-    appendToAllToolParts,
+    prependToTextPart,
+    prependToAllToolParts,
     createSyntheticTextPart,
     hasContent,
 } from "../utils"
@@ -176,7 +177,7 @@ export const injectMessageIds = (
             let injected = false
             for (const part of message.parts) {
                 if (part.type === "text") {
-                    injected = appendToTextPart(part, tag) || injected
+                    injected = prependToTextPart(part, tag) || injected
                 }
             }
 
@@ -184,7 +185,7 @@ export const injectMessageIds = (
                 continue
             }
 
-            message.parts.push(createSyntheticTextPart(message, tag))
+            message.parts.unshift(createSyntheticTextPart(message, tag))
             continue
         }
 
@@ -196,18 +197,28 @@ export const injectMessageIds = (
             continue
         }
 
-        if (appendToAllToolParts(message, tag)) {
+        if (prependToAllToolParts(message, tag)) {
             continue
         }
 
-        if (appendToLastTextPart(message, tag)) {
+        let injected = false
+        for (const part of message.parts) {
+            if (part.type === "text") {
+                if (prependToTextPart(part, tag)) {
+                    injected = true
+                    break
+                }
+            }
+        }
+
+        if (injected) {
             continue
         }
 
         const syntheticPart = createSyntheticTextPart(message, tag)
         const firstToolIndex = message.parts.findIndex((p) => p.type === "tool")
         if (firstToolIndex === -1) {
-            message.parts.push(syntheticPart)
+            message.parts.unshift(syntheticPart)
         } else {
             message.parts.splice(firstToolIndex, 0, syntheticPart)
         }

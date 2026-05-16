@@ -88,11 +88,23 @@ const findLastTextPart = (message: WithParts): TextPart | null => {
 }
 
 export const appendToTextPart = (part: TextPart, injection: string): boolean => {
+    return injectIntoTextPart(part, injection, "append")
+}
+
+export const prependToTextPart = (part: TextPart, injection: string): boolean => {
+    return injectIntoTextPart(part, injection, "prepend")
+}
+
+const injectIntoTextPart = (
+    part: TextPart,
+    injection: string,
+    mode: "append" | "prepend",
+): boolean => {
     if (typeof part.text !== "string") {
         return false
     }
 
-    const normalizedInjection = injection.replace(/^\n+/, "")
+    const normalizedInjection = injection.replace(/^\n+/, "").replace(/\n+$/, "")
     if (!normalizedInjection.trim()) {
         return false
     }
@@ -100,22 +112,42 @@ export const appendToTextPart = (part: TextPart, injection: string): boolean => 
         return true
     }
 
-    const baseText = part.text.replace(/\n*$/, "")
-    part.text = baseText.length > 0 ? `${baseText}\n\n${normalizedInjection}` : normalizedInjection
+    const baseText = part.text.trim()
+    if (mode === "append") {
+        part.text = baseText.length > 0 ? `${baseText}\n\n${normalizedInjection}` : normalizedInjection
+    } else {
+        part.text = baseText.length > 0 ? `${normalizedInjection}\n\n${baseText}` : normalizedInjection
+    }
     return true
 }
 
 export const appendToAllToolParts = (message: WithParts, tag: string): boolean => {
+    return injectIntoAllToolParts(message, tag, "append")
+}
+
+export const prependToAllToolParts = (message: WithParts, tag: string): boolean => {
+    return injectIntoAllToolParts(message, tag, "prepend")
+}
+
+const injectIntoAllToolParts = (
+    message: WithParts,
+    tag: string,
+    mode: "append" | "prepend",
+): boolean => {
     let injected = false
     for (const part of message.parts) {
         if (part.type === "tool") {
-            injected = appendToToolPart(part, tag) || injected
+            injected = injectIntoToolPart(part, tag, mode) || injected
         }
     }
     return injected
 }
 
 export const appendToToolPart = (part: ToolPart, tag: string): boolean => {
+    return injectIntoToolPart(part, tag, "append")
+}
+
+const injectIntoToolPart = (part: ToolPart, tag: string, mode: "append" | "prepend"): boolean => {
     if (part.state?.status !== "completed" || typeof part.state.output !== "string") {
         return false
     }
@@ -123,7 +155,12 @@ export const appendToToolPart = (part: ToolPart, tag: string): boolean => {
         return true
     }
 
-    part.state.output = `${part.state.output}${tag}`
+    const normalizedTag = tag.replace(/^\n+/, "").replace(/\n+$/, "")
+    if (mode === "append") {
+        part.state.output = `${part.state.output}\n${normalizedTag}`
+    } else {
+        part.state.output = `${normalizedTag}\n${part.state.output}`
+    }
     return true
 }
 
