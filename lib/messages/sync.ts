@@ -114,6 +114,34 @@ export const syncCompressionBlocks = (
         }
     }
 
+    // Recalculate stats based on active reality
+    let activePrunedTokens = 0
+    for (const blockId of messagesState.activeBlockIds) {
+        const block = messagesState.blocksById.get(blockId)
+        if (block) {
+            activePrunedTokens += block.compressedTokens
+        }
+    }
+    state.stats.totalPruneTokens = activePrunedTokens
+    state.stats.pruneTokenCounter = 0 // Reset turn counter to avoid double counting
+
+    // Sync tool pruning state
+    const currentToolIds = new Set<string>()
+    for (const msg of messages) {
+        const parts = Array.isArray(msg.parts) ? msg.parts : []
+        for (const part of parts) {
+            if (part.type === "tool" && part.callID) {
+                currentToolIds.add(part.callID)
+            }
+        }
+    }
+
+    for (const toolId of state.prune.tools.keys()) {
+        if (!currentToolIds.has(toolId)) {
+            state.prune.tools.delete(toolId)
+        }
+    }
+
     if (missingOriginBlockIds.length > 0 || deactivatedCount > 0 || reactivatedCount > 0) {
         logger.info("Synced compress block state", {
             missingOriginCount: missingOriginBlockIds.length,
