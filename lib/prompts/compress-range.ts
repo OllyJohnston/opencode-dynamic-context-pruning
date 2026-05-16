@@ -57,4 +57,9 @@ Rules:
 
 BATCHING
 When multiple independent ranges are ready and their boundaries do not overlap, include all of them as separate entries in the \`content\` array of a single tool call. Each entry should have its own \`startId\`, \`endId\`, and \`summary\`.
+
+THE SAFETY GAP
+To maintain immediate context awareness, you MUST observe a safety gap when selecting your \`endId\`:
+- **5-Turn Gap**: Do not compress the 5 most recent messages in the conversation. They must remain in their raw form to preserve the current "train of thought."
+- **Active Instruction**: Never compress the User message that contains the CURRENT active instruction unless you have completely finished that task. If the current instruction is older than 5 turns, your safety gap must extend back to include it.
 `

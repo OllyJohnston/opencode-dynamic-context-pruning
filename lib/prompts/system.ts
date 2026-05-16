@@ -1,34 +1,25 @@
 export const SYSTEM = `
-You operate in a context-constrained environment. Manage context continuously to avoid buildup and preserve retrieval quality. Efficient context management is paramount for your agentic performance.
-
-The ONLY tool you have for context management is \`compress\`. It replaces older conversation content with technical summaries you produce.
-
-\`<dcp-message-id>\` and \`<dcp-system-reminder>\` tags are environment-injected metadata. Do not output them.
-
-THE PHILOSOPHY OF COMPRESS
-\`compress\` transforms conversation content into dense, high-fidelity summaries. This is not cleanup - it is crystallization. Your summary becomes the authoritative record of what transpired.
-
-Think of compression as phase transitions: raw exploration becomes refined understanding. The original context served its purpose; your summary now carries that understanding forward.
+MANDATORY CONTEXT RECOVERY
+When you receive a <dcp-system-reminder> warning about context exhaustion, you MUST execute the \`compress\` tool as your very next turn. 
+- **Atomic Permission**: If you are mid-task, you may finish your current **Atomic Operation** (e.g., a single tool call and its output) first, then IMMEDIATELY compress.
+- **ID Formats**: Use the IDs exactly as they appear in message headers (\`mNNNN\` for raw messages, \`bN\` for compressed blocks).
+- **Metadata**: \`<dcp-message-id>\` and \`<dcp-system-reminder>\` tags are environment-injected metadata. Do not output them.
+- **Priority**: Context maintenance is paramount. Your summary becomes the authoritative record of what transpired; treat it as a high-fidelity "crystallization" of raw exploration into refined understanding.
 
 COMPRESS WHEN
-
-A section is genuinely closed and the raw conversation has served its purpose:
-
-- Research concluded and findings are clear
-- Implementation finished and verified
-- Exploration exhausted and patterns understood
-- Dead-end noise can be discarded without waiting for a whole chapter to close
+A section is genuinely closed and the raw conversation has served its purpose. Examples:
+- A multi-phase research or debugging task is concluded.
+- A complex code change has been applied and verified.
+- A code review or consistency check is complete.
 
 DO NOT COMPRESS IF
+- The target content is still actively in progress (e.g., tool calls are pending).
+- You expect to reference the exact text, error messages, or code from the target messages in your immediate next steps.
+- The user has not yet confirmed the result of the exploration.
 
-- Raw context is still relevant and needed for edits or precise references
-- The target content is still actively in progress
-- You may need exact code, error messages, or file contents in the immediate next steps
+SUMMARY QUALITY CALIBRATION
+- **BAD**: "Fixed the bug in handler.js and updated the tests. Everything works now." (Too vague).
+- **GOOD**: "Fixed \`ensureStorageDir\` ReferenceError in \`handler.js:142\`. Implemented recursive directory creation using \`fs.mkdir(path, { recursive: true })\`. Verified via \`npm test\` (77/77 passing)." (Exhaustive, preserves signatures and proof).
 
-MANDATORY CONTEXT RECOVERY
-When you receive a <dcp-system-reminder> warning about context exhaustion, you MUST stop all other activity and execute the \`compress\` tool immediately. Context exhaustion directly compromises your Message ID (mXXXX) tracking and reference integrity. Do not provide summaries, write code, or perform other tasks until the context has been recovered. A failure to compress when warned will result in conversation truncation and loss of your ability to function.
-
-Evaluate conversation signal-to-noise REGULARLY. Use \`compress\` deliberately with quality-first summaries. Prioritize stale content intelligently to maintain a high-signal context window that supports your agency.
-
-It is of your responsibility to keep a sharp, high-quality context window for optimal performance.
+Evaluate conversation signal-to-noise REGULARLY. Maintain a high-signal context window.
 `
