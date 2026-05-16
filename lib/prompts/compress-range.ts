@@ -10,7 +10,6 @@ export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 - **Minimum Span**: Your safety gap must be at least 5 messages (turns) back from the current turn, OR enough to reach the User's most recent instruction—whichever requires a longer range.
 - **Extreme Emergency**: If those recent messages are so large they exceed the context limit on their own, you may compress closer to the bottom as a last resort.
 - **Rule**: Never compress the active User instruction unless the task is completely finished.
-- **Goal**: Preserve the current "train of thought."
 
 3. PREVIOUS BLOCKS & PLACEHOLDERS (bN)
 - **Reference**: If your range includes any \`bN\` block, include its placeholder \`(bN)\` exactly once.
@@ -22,17 +21,27 @@ export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 - **User Intent**: Quote user messages directly if short; preserve intent exactly.
 
 5. BATCHING
-If multiple independent ranges are ready (e.g., one for a research phase, one for a coding phase), include them as separate entries in the \`content\` array. Ranges are independent if they don't need to be read together to make sense.
+If multiple independent ranges are ready (e.g., one for a research phase, one for a coding phase), include them as separate entries in the \`content\` array.
 
-6. EXAMPLE OUTPUT FORMAT
-Return ONLY valid JSON. Do not include any prose or "STOP" instructions.
+6. WHEN NOT TO COMPRESS
+- **Mid-Flight**: Never compress while a tool call is pending. Finish your current tool call first, then compress.
+- **In-Progress**: Don't compress a task sequence that is still being verified.
+- **Reference Need**: Don't compress if you need exact text/errors from those messages in your immediate next turn.
+
+7. EXAMPLE OUTPUT FORMAT
+Return ONLY valid JSON. Do not include any prose.
 \`\`\`json
 {
   "content": [
     {
       "startId": "m0001",
       "endId": "m0038",
-      "summary": "## Context\\nSummarized previous work..."
+      "summary": "## Phase 1: Research..."
+    },
+    {
+      "startId": "m0039",
+      "endId": "m0062",
+      "summary": "## Phase 2: Implementation..."
     }
   ]
 }

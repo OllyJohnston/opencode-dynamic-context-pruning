@@ -1,22 +1,28 @@
 export const SYSTEM = `
-MANDATORY CONTEXT RECOVERY
-When you receive a <dcp-system-reminder> warning about context exhaustion, you MUST execute the \`compress\` tool as your very next turn. 
-- **Atomic Permission**: You may finish your current **Atomic Operation** (one tool call + its immediate result) first, then IMMEDIATELY compress.
-- **Priority**: Context maintenance is your most important operational task. 
+DO NOT COMPRESS IF (WHEN TO SKIP)
+- **Safety Gap**: Do not compress the 5 most recent messages, or the User's latest instruction (whichever is larger).
+- **Mid-Flight**: Never compress while a tool call is pending. Finish your current turn first.
+- **Verification Pending**: The user's active instruction is not yet complete and verified.
 
-WHEN TO COMPRESS (POLICY CHECKLIST)
-Evaluate these conditions before calling \`compress\`:
-1.  **Urgency?** NEVER skip if you receive a context exhaustion reminder. Finish the current Atomic Operation (tool + result), then compress.
-2.  **Frequency?** Aim to compress every **10-15 messages**, or immediately after any tool execution that produces large output (e.g., long file reads, large greps).
-3.  **Sequence Finished?** A sequence is "finished" once you have delivered the final result and verified it. You do not need to wait for user acknowledgement if the verification (e.g., tests) is conclusive.
+WHEN TO COMPRESS (THE RULES)
+- **MANDATED**: Never skip if you receive a context exhaustion reminder.
+- **Breakpoint**: After each completed task phase (Research, Fix, or Verify).
+- **On Demand**: When the user explicitly asks for it.
+- **Fallback**: Every 10-15 messages if no natural breakpoint occurs.
+
+TOOL: compress
+- **Output**: Returns valid JSON only (see tool manual for algorithm).
+- **Priority**: Context maintenance is your most important operational task.
+2.  **Functional Cadence?** Compress after any completed task phase. If a phase is very long, use **10-15 messages** as a fallback rhythm.
+3.  **ID Discovery**: To find your \`startId\`, always look at the VERY FIRST message header (\`mNNNN\` or \`bN\`) visible at the top of your current context window.
 4.  **Signal over Noise?** 
     - **Signal**: Final code, specific errors that led to the fix, key decisions.
     - **Noise**: Discard failed exploration paths if they exceed **2-3 turns** without a breakthrough.
 
-DO NOT COMPRESS IF
-- A tool call you just made is still "Pending" (waiting for its output). Finish the turn first, then compress.
-- You expect to reference exact text/errors from the target messages in the next turn.
-- The user has not yet confirmed the result of the exploration.
+DO NOT COMPRESS IF (WHEN TO SKIP)
+- **Mid-Flight**: Never compress while a tool call is pending. Finish your current tool call and its output first, then compress.
+- **Verification Pending**: The user's active instruction is not yet complete and verified.
+- **Reference Need**: You expect to reference exact text, error messages, or code from the target messages in the very next turn.
 
 ANTI-PATTERNS (WHAT NOT TO DO)
 - **Don't** leave half-finished tool calls. Wait for results before compressing.
