@@ -5,16 +5,22 @@ export const COMPRESS_RANGE = `HOW TO COMPRESS (TECHNICAL MANUAL)
 - **Active Instruction**: Never compress the User's active instruction.
 - **System Headers**: The \`mNNNN\` tags in the system headers are REAL message IDs. Do not ignore them.
 - **Emergency Exception**: Only violate the floor if the gap itself exceeds the context limit.
+- **PRIORITY MANDATE**: If you see a \`<dcp-system-reminder>\`, you MUST prioritize compression above ALL other work. Failure to compress when instructed will cause message IDs to drift and eventually corrupt the session. Do not write code or provide answers until you have compressed.
 
 2. ID SELECTION ALGORITHM
 - **startId**: Pick the first available \`mNNNN\` message ID in your history (usually \`m0001\`).
-- **Continuity**: If your history already contains a block (e.g., \`b10\`), your new \`startId\` should usually be the message immediately AFTER that block (e.g., \`m0039\`) to avoid redundant re-processing of old content.
+- **The Anchor Rule**: ALWAYS use the ID of the VERY FIRST message visible at the top of your window as your \`startId\`. NEVER guess or assume what was inside a previous block. If \`m0070\` is the first thing you see, use \`m0070\`.
+- **Incremental Rule**: If a block exists, start your new range AFTER it.
+- **HOW TO READ BLOCKS**: Every block header contains its ID and original range. 
+  - *Example*: \`[Compressed conversation section b10 (m0001-m0038)]\`.
+  - Use these numbers to identify exactly which IDs are already pruned.
 - **endId**: The last message in the range (must obey Safety Gap).
 - **No Guessing**: NEVER numerically increment IDs (e.g., if you see m0040, don't assume m0041 exists). Use ONLY visible tags.
 - **Exclusions**: Skip system-generated notifications (e.g., "Compressed N messages") and technical reminders.
 - **Visual Order**: In the raw conversation, the \`startId\` must appear vertically above the \`endId\`.
 - **Verification**: After execution, you MUST report the newly created block ID (e.g., \`b11\`) in your response. Do not fake results.
 - **ARITHMETIC MANDATE**: Treat \`mNNNN\` tags as numerical indexes. Perform explicit arithmetic (e.g., \`166 - 40 = 126\`) to calculate conversation depth. NEVER rely on "vibe" or "feel" for volume.
+- **The Full Span Rule**: IDs are a continuous timeline. If the top ID is \`m0040\` and the bottom ID is \`m0160\`, there are 120 messages in that span, even if you are only currently looking at a few of them. Trust the numbers.
 - **CHAT VS. FILES**: Message IDs (\`mNNNN\`) exist ONLY in your conversation history. They are NOT files on disk. NEVER use \`ls\`, \`read_file\`, or \`grep\` on the repository to find message IDs. Look UP at the chat headers.
 
 3. PREVIOUS BLOCKS & PLACEHOLDERS (bN)
@@ -37,7 +43,12 @@ If multiple independent ranges are ready (e.g., one for a research phase, one fo
 - **In-Progress**: Don't compress a task sequence that is still being verified.
 - **Reference Need**: Don't compress if you need exact text/errors from those messages in your immediate next turn.
 
-7. EXAMPLE OUTPUT FORMAT
+7. THE ARRAY RULE (MANDATORY)
+The \`content\` field MUST be an array \`[]\`, even if you only have one range.
+- **WRONG**: \`"content": { "startId": "m0001", ... }\`
+- **RIGHT**: \`"content": [{ "startId": "m0001", ... }]\`
+
+8. EXAMPLE OUTPUT FORMAT
 Return ONLY valid JSON. Do not include any prose.
 \`\`\`json
 {
@@ -56,4 +67,10 @@ Return ONLY valid JSON. Do not include any prose.
   ]
 }
 \`\`\`
+
+9. NO MANUAL BLOCKS (ANTI-HALLUCINATION)
+- **NEVER** write block markers like \`<bN>\` or \`(bN)\` in your prose unless you are referencing an ALREADY EXISTING block from your history.
+- **NEVER** fake a compression by claiming you have "preserved" or "archived" messages in a new block without calling the \`compress\` tool.
+- Block IDs (like \`b15\`) are ONLY assigned by the system. If you haven't received a tool output confirming a new block ID, that block DOES NOT EXIST.
+- **DO NOT** use the \`bN\` format as a decorative tag. It is a technical coordinate.
 `

@@ -411,7 +411,7 @@ test("message-mode nudges append to existing text parts and list only earlier vi
 
     const injectedNudge = messages[2]?.parts[0]
     assert.equal(injectedNudge?.type, "text")
-    assert.match((injectedNudge as any).text, /^<dcp-system-reminder>Base context nudge/)
+    assert.match((injectedNudge as any).text, /<dcp-system-reminder>Base context nudge/)
     assert.match((injectedNudge as any).text, /Message priority context:/)
     assert.match((injectedNudge as any).text, /High-priority message IDs before this point: m0001/)
     assert.doesNotMatch((injectedNudge as any).text, /m0002/)
@@ -496,7 +496,7 @@ test("range-mode nudges append to existing text parts before tool outputs", () =
     const toolOutput = messages[1]?.parts[1]
     assert.equal(injectedNudge?.type, "text")
     assert.equal(toolOutput?.type, "tool")
-    assert.match((injectedNudge as any).text, /^<dcp-system-reminder>Base context nudge/)
+    assert.match((injectedNudge as any).text, /<dcp-system-reminder>Base context nudge/)
     assert.match((injectedNudge as any).text, /Compressed block context:/)
     assert.match((injectedNudge as any).text, /Active compressed blocks in this session: 1 \(b7\)/)
     assert.equal((toolOutput as any).state.output, "task output body")

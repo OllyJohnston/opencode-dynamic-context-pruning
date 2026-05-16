@@ -18,7 +18,7 @@ import {
     validateSummaryPlaceholders,
 } from "./range-utils"
 import {
-    COMPRESSED_BLOCK_HEADER,
+    COMPRESSED_BLOCK_HEADER_BASE,
     allocateBlockId,
     allocateRunId,
     applyCompressionState,
@@ -151,7 +151,12 @@ export function createCompressRangeTool(ctx: ToolContext): ReturnType<typeof too
 
             for (const preparedPlan of preparedPlans) {
                 const blockId = allocateBlockId(ctx.state)
-                const storedSummary = wrapCompressedSummary(blockId, preparedPlan.finalSummary)
+                const storedSummary = wrapCompressedSummary(
+                    blockId,
+                    preparedPlan.finalSummary,
+                    preparedPlan.entry.startId,
+                    preparedPlan.entry.endId,
+                )
                 const summaryTokens = countTokens(storedSummary)
 
                 const applied = applyCompressionState(
@@ -186,7 +191,7 @@ export function createCompressRangeTool(ctx: ToolContext): ReturnType<typeof too
 
             await finalizeSession(ctx, toolCtx, rawMessages, notifications, input.topic)
 
-            return `Compressed ${totalCompressedMessages} messages into ${COMPRESSED_BLOCK_HEADER}. STOP and wait for the User to provide the next instruction.`
+            return `[DCP SUCCESS] Compressed ${totalCompressedMessages} messages into ${COMPRESSED_BLOCK_HEADER_BASE}. CRITICAL: Your previous turn-plan and Message IDs (mXXXX) are now INVALID. You MUST NOT continue your previous task. STOP and wait for User guidance.`
         },
     })
 }

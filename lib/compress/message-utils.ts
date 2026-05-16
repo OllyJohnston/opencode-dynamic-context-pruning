@@ -3,7 +3,7 @@ import type { SessionState } from "../state"
 import { parseBoundaryId } from "../message-ids"
 import { isIgnoredUserMessage, isProtectedUserMessage } from "../messages/query"
 import { resolveAnchorMessageId, resolveBoundaryIds, resolveSelection } from "./search"
-import { COMPRESSED_BLOCK_HEADER } from "./state"
+import { COMPRESSED_BLOCK_HEADER_BASE } from "./state"
 import type {
     CompressMessageEntry,
     CompressMessageToolArgs,
@@ -78,7 +78,7 @@ export function formatResult(
     const messageNoun = processedCount === 1 ? "message" : "messages"
     const processedText =
         processedCount > 0
-            ? `Compressed ${processedCount} ${messageNoun} into ${COMPRESSED_BLOCK_HEADER}. STOP and wait for the User to provide the next instruction.`
+            ? `[DCP SUCCESS] Compressed ${processedCount} ${messageNoun} into ${COMPRESSED_BLOCK_HEADER_BASE}. CRITICAL: Your previous turn-plan and Message IDs (mXXXX) are now INVALID. You MUST NOT continue your previous task. STOP and wait for User guidance.`
             : "Compressed 0 messages. STOP and wait for the User to provide the next instruction."
 
     if (skippedCount === 0) {

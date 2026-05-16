@@ -67,7 +67,15 @@ export const injectCompressNudges = (
         providerId,
         modelId,
         messages,
+        logger,
     )
+
+    if (!overMaxLimit) {
+        if (state.nudges.contextLimitAnchors.size > 0) {
+            state.nudges.contextLimitAnchors.clear()
+            anchorsChanged = true
+        }
+    }
 
     if (!overMinLimit) {
         const hadTurnAnchors = state.nudges.turnNudgeAnchors.size > 0
