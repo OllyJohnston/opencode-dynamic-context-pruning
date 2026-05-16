@@ -57,7 +57,6 @@ export interface ExperimentalConfig {
 
 export interface PluginConfig {
     enabled: boolean
-    autoUpdate: boolean
     debug: boolean
     pruneNotification: "off" | "minimal" | "detailed"
     pruneNotificationType: "chat" | "toast"
@@ -93,7 +92,6 @@ const COMPRESS_DEFAULT_PROTECTED_TOOLS = ["task", "skill", "todowrite", "todorea
 export const VALID_CONFIG_KEYS = new Set([
     "$schema",
     "enabled",
-    "autoUpdate",
     "debug",
     "showUpdateToasts",
     "pruneNotification",
@@ -655,7 +653,6 @@ function showConfigWarnings(
 
 const defaultConfig: PluginConfig = {
     enabled: true,
-    autoUpdate: true,
     debug: false,
     pruneNotification: "detailed",
     pruneNotificationType: "chat",
