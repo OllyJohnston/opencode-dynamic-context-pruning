@@ -181,9 +181,7 @@ export function isContextOverLimits(
         const reportedTokens =
             (assistantInfo.tokens?.input || 0) +
             (assistantInfo.tokens?.output || 0) +
-            (assistantInfo.tokens?.reasoning || 0) +
-            (assistantInfo.tokens?.cache?.read || 0) +
-            (assistantInfo.tokens?.cache?.write || 0)
+            (assistantInfo.tokens?.reasoning || 0)
 
         if (msg.info.role === "assistant" && reportedTokens > 0) {
             currentTokens = reportedTokens

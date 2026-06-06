@@ -139,7 +139,7 @@ test("isContextOverLimits ignores stale summary totals and resumes with fresh re
     const state = createSessionState()
     state.lastCompaction = 2
 
-    const staleAssistantTotal = 86000 + 1200 + 300 + 5000
+    const staleAssistantTotal = 86000 + 1200
     assert.equal(getCurrentTokenUsage(state, messages), 0)
 
     const underLimit = isContextOverLimits(
@@ -155,7 +155,7 @@ test("isContextOverLimits ignores stale summary totals and resumes with fresh re
     assert.equal(underLimit.overMinLimit, true)
 
     messages.push(buildPostCompactionAssistantMessage())
-    const freshReportedTotal = 2400 + 600 + 150 + 300
+    const freshReportedTotal = 2400 + 600 + 150
     state.systemPromptTokens = freshReportedTotal - 50
 
     assert.equal(getCurrentTokenUsage(state, messages), freshReportedTotal)
@@ -173,7 +173,7 @@ test("isContextOverLimits ignores stale summary totals and resumes with fresh re
 })
 
 test("isContextOverLimits extends the max threshold by active summary tokens", () => {
-    const freshReportedTotal = 2400 + 600 + 150 + 300
+    const freshReportedTotal = 2400 + 600 + 150
     const messages = buildCompactedMessages()
     messages.push(buildPostCompactionAssistantMessage())
 
@@ -209,7 +209,7 @@ test("isContextOverLimits extends the max threshold by active summary tokens", (
 })
 
 test("isContextOverLimits does not extend the max threshold when summaryBuffer is disabled", () => {
-    const freshReportedTotal = 2400 + 600 + 150 + 300
+    const freshReportedTotal = 2400 + 600 + 150
     const messages = buildCompactedMessages()
     messages.push(buildPostCompactionAssistantMessage())
 
