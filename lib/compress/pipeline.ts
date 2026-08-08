@@ -83,7 +83,7 @@ export async function finalizeSession(
     entries: NotificationEntry[],
     batchTopic: string | undefined,
 ): Promise<void> {
-    ctx.state.manualMode = ctx.state.manualMode ? "active" : false
+    ctx.state.manualMode = ctx.state.manualMode === "active" ? "active" : false
     applyPendingCompressionDurations(ctx.state)
     await saveSessionState(ctx.state, ctx.logger)
 
