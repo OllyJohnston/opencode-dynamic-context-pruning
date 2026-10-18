@@ -7,15 +7,40 @@ Automatically reduces token usage in OpenCode by managing conversation context.
 
 ![DCP in action](assets/images/dcp-hero.png)
 
+## How This Fork Differs
+
+This repository is a fork of [Opencode-DCP/opencode-dynamic-context-pruning](https://github.com/Opencode-DCP/opencode-dynamic-context-pruning), maintained by [OllyJohnston](https://github.com/OllyJohnston). It tracks upstream selectively — individual upstream fixes are cherry-picked rather than merged wholesale — and is tuned for smaller and local-context models.
+
+Changes from upstream:
+
+- **More aggressive compression defaults.** Compression is nudged sooner and more forcefully so small-context models do not silently overflow (see the table below).
+- **Automatic updates removed.** The auto-update subsystem is omitted, so a forked checkout is never replaced by an npm release.
+- **Token-accounting fixes.** The cache-token double-count that could fire premature compression nudges has been removed, and token usage is tracked using base plus incremental counting.
+- **Hardened prompts.** Compression-first nudging, a post-compression STOP rule, and stricter message-ID / anti-hallucination rules.
+- **Leaner scope.** Upstream's V2 adapter (`lib/v2`), TUI panel (`lib/tui`), and sandbox/lab/logger test harness (`scripts/sandbox`, `tests/lab`, `tests/logger`) are not included.
+
+Default values that differ:
+
+| Setting | This fork | Upstream |
+| --- | --- | --- |
+| `compress.maxContextLimit` | `"60%"` | `100000` |
+| `compress.minContextLimit` | `"40%"` | `50000` |
+| `compress.nudgeFrequency` | `2` | `5` |
+| `compress.iterationNudgeThreshold` | `3` | `15` |
+| `compress.nudgeForce` | `"strong"` | `"soft"` |
+
+> [!NOTE]
+> These defaults are deliberate for small (~100k) context windows. On a large-context model, raise `compress.maxContextLimit` and `compress.minContextLimit` (or set absolute token counts) to match upstream.
+
 ## Installation
 
-Install from the CLI:
+Install this fork from the CLI:
 
 ```bash
-opencode plugin @tarquinen/opencode-dcp@latest --global
+opencode plugin github:OllyJohnston/opencode-dynamic-context-pruning --global
 ```
 
-This installs the package and adds it to your global OpenCode config.
+This installs the fork directly from GitHub and adds it to your global OpenCode config.
 
 ## How It Works
 
