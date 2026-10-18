@@ -1,4 +1,4 @@
-# Dynamic Context Pruning Plugin
+# Dynamic Context Pruning Plugin Extended (OpenCode V1 Only)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/dansmolsky)
 [![npm version](https://img.shields.io/npm/v/@tarquinen/opencode-dcp.svg)](https://www.npmjs.com/package/@tarquinen/opencode-dcp)
