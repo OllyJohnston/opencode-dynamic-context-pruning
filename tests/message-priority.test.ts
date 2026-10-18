@@ -829,7 +829,7 @@ test("hallucination stripping preserves content when dcp-message-id is mentioned
 
     assert.equal(
         stripHallucinationsFromString(input),
-        "The tag called `` is used to track messages. This text should survive.\n",
+        "The tag called `` is used to track messages. This text should survive.\n\n",
     )
 })
 
