@@ -9,25 +9,34 @@ Automatically reduces token usage in OpenCode by managing conversation context.
 
 ## How This Fork Differs
 
-This repository is a fork of [Opencode-DCP/opencode-dynamic-context-pruning](https://github.com/Opencode-DCP/opencode-dynamic-context-pruning), maintained by [OllyJohnston](https://github.com/OllyJohnston). It tracks upstream selectively — individual upstream fixes are cherry-picked rather than merged wholesale — and is tuned for smaller and local-context models.
+This repository is a fork of [Opencode-DCP/opencode-dynamic-context-pruning](https://github.com/Opencode-DCP/opencode-dynamic-context-pruning), maintained by [OllyJohnston](https://github.com/OllyJohnston). It exists to make autonomous compression reliable on smaller and mid-size models — it was originally hardened against **Qwen 3.6**, which lost track of message IDs and chose fragmented ranges under the upstream design. Upstream is tracked selectively: individual upstream fixes are cherry-picked rather than merged wholesale.
 
-Changes from upstream:
+### Compression engine
 
-- **More aggressive compression defaults.** Compression is nudged sooner and more forcefully so small-context models do not silently overflow (see the table below).
+The injection engine and prompts were substantially reworked:
+
+- **Header-style anchoring.** Message IDs and system reminders now sit at the *start* of each message instead of the end, so the model reads a message's `mNNNN`/`bN` anchor *before* its content. This removes the "back-to-front" confusion and start/end swaps that made `compress` select the wrong ranges.
+- **Token-aware thresholds.** Triggers are percentages of the live model context window (`maxContextLimit: "60%"`, `minContextLimit: "40%"`) rather than fixed token counts, with optional per-model overrides (`modelMaxLimits` / `modelMinLimits`). The usable budget is derived from the model limit as `context − output`.
+- **Base + incremental token counting.** Current usage is anchored to the latest assistant message's reported tokens and incremented for messages after it, rather than trusting a single reported total; the cache-token double-count that could fire premature nudges has been removed.
+- **Summary buffer.** Tokens held in active summaries extend the effective max threshold, so DCP's own compressions do not immediately re-trigger nudges.
+- **Contiguous "visual filter" sweeps.** Prompts force compression from the top of the window, starting immediately after the most recent summary block, so history stays `[summaries] → [active discussion]` instead of fragments.
+- **Compression-first policy.** A mandatory post-compression STOP rule and high-authority nudges ("CRITICAL WARNING", "MANDATORY RECOVERY") ensure the model compresses before continuing.
+- **Anti-hallucination ID rules.** Strict "never guess or numerically increment IDs" rules, with arithmetic-verified boundaries and a fixed 5-message safety gap at the bottom of history.
+
+### Other differences
+
+- **More aggressive compression defaults**, deliberate for small-context windows:
+
+  | Setting | This fork | Upstream |
+  | --- | --- | --- |
+  | `compress.maxContextLimit` | `"60%"` | `100000` |
+  | `compress.minContextLimit` | `"40%"` | `50000` |
+  | `compress.nudgeFrequency` | `2` | `5` |
+  | `compress.iterationNudgeThreshold` | `3` | `15` |
+  | `compress.nudgeForce` | `"strong"` | `"soft"` |
+
 - **Automatic updates removed.** The auto-update subsystem is omitted, so a forked checkout is never replaced by an npm release.
-- **Token-accounting fixes.** The cache-token double-count that could fire premature compression nudges has been removed, and token usage is tracked using base plus incremental counting.
-- **Hardened prompts.** Compression-first nudging, a post-compression STOP rule, and stricter message-ID / anti-hallucination rules.
 - **Leaner scope.** Upstream's V2 adapter (`lib/v2`), TUI panel (`lib/tui`), and sandbox/lab/logger test harness (`scripts/sandbox`, `tests/lab`, `tests/logger`) are not included.
-
-Default values that differ:
-
-| Setting | This fork | Upstream |
-| --- | --- | --- |
-| `compress.maxContextLimit` | `"60%"` | `100000` |
-| `compress.minContextLimit` | `"40%"` | `50000` |
-| `compress.nudgeFrequency` | `2` | `5` |
-| `compress.iterationNudgeThreshold` | `3` | `15` |
-| `compress.nudgeForce` | `"strong"` | `"soft"` |
 
 > [!NOTE]
 > These defaults are deliberate for small (~100k) context windows. On a large-context model, raise `compress.maxContextLimit` and `compress.minContextLimit` (or set absolute token counts) to match upstream.
