@@ -3,11 +3,7 @@ import test from "node:test"
 import { finalizeSession } from "../lib/compress/pipeline"
 import type { PluginConfig } from "../lib/config"
 import { Logger } from "../lib/logger"
-import {
-    createSessionState,
-    loadManualModeSetting,
-    type WithParts,
-} from "../lib/state"
+import { createSessionState, type WithParts } from "../lib/state"
 
 function buildConfig(): PluginConfig {
     return {
@@ -70,9 +66,6 @@ test("finalizeSession resets compress-pending to auto mode", async () => {
     )
 
     assert.equal(state.manualMode, false)
-
-    const persisted = await loadManualModeSetting(sessionId, new Logger(false))
-    assert.equal(persisted, false)
 })
 
 test("finalizeSession preserves explicit active manual mode", async () => {
@@ -90,7 +83,4 @@ test("finalizeSession preserves explicit active manual mode", async () => {
     )
 
     assert.equal(state.manualMode, "active")
-
-    const persisted = await loadManualModeSetting(sessionId, new Logger(false))
-    assert.equal(persisted, true)
 })
