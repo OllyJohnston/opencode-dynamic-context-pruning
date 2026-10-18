@@ -93,7 +93,6 @@ export const VALID_CONFIG_KEYS = new Set([
     "$schema",
     "enabled",
     "debug",
-    "showUpdateToasts",
     "pruneNotification",
     "pruneNotificationType",
     "turnProtection",
@@ -168,10 +167,6 @@ export function validateConfigTypes(config: Record<string, any>): ValidationErro
 
     if (config.enabled !== undefined && typeof config.enabled !== "boolean") {
         errors.push({ key: "enabled", expected: "boolean", actual: typeof config.enabled })
-    }
-
-    if (config.autoUpdate !== undefined && typeof config.autoUpdate !== "boolean") {
-        errors.push({ key: "autoUpdate", expected: "boolean", actual: typeof config.autoUpdate })
     }
 
     if (config.debug !== undefined && typeof config.debug !== "boolean") {
